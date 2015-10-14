@@ -71,13 +71,13 @@ def check_string(result):
     """
     str_dif = re.findall("[+-]", result)
     if len(str_dif) >= len(result)/4:
-        return "User should rewrite everything!"
+        return "User wrote smth strange!"
     elif len(str_dif) == 0:
         return "Everything is ok!"
     else:
         errors, user_string = normalize_string(result)
         dic_with_error_info = check_error_base(errors)
-        return user_string, errors, dic_with_error_info
+        return (user_string, errors, dic_with_error_info)
 
 
 # ========SEND TO TEMPlATE ===============================
@@ -91,7 +91,9 @@ def count_results(request):
         user_text = request.POST.get("dict_text") #what user wrote
         original_text = Dict_text.objects.get() #first text. Check if None!!
         result = diff_strings(user_text, original_text.dic_origin_text)
-        send_user, errors, error_dic = check_string(result)
-        print error_dic
-        return render(request,'dic_results.html', {"answer": send_user, "errors": errors, "error_info":error_dic})
-
+        answer = check_string(result)
+        if isinstance(answer, tuple):
+            send_user, errors, error_dic = answer[0], answer[1], answer[2]
+            return render(request,'dic_results.html', {"answer": send_user, "errors": errors, "error_info":error_dic})
+        else:
+            return render(request,'dic_results.html', {"answer": answer})
