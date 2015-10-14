@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Живое слово</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/zhslovo_style.css' %}" />
+
+</head>
+<body>
+
+<div>
+
+    {% block header %}
+    <header>
+
+    </header>
+
+    {% endblock %}
+
+    {% block content %}
+    <a href="http://totaldict.ru"><button class="button">Вернуться на Тотальный диктант</button></a>
+
+    <div class="content">
+    <form action="/zhivoeslovo/results" method="post">
+        {% csrf_token %}
+        <p>Писать диктант сюда:</p>
+        <p><textarea rows="10" cols="55" name="dict_text"></textarea></p>
+        <input type="submit" class = "button" value="Проверить">
+    </form>
+    </div>
+
+    {% endblock %}
+
+
+    <footer>
+    {% block footer %}
+
+
+    {% endblock %}
+    </footer>
+
+</div>
+
+
+</body>
+</html>

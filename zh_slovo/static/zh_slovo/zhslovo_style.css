@@ -1,0 +1,21 @@
+
+body {
+    margin: 0;
+    background: #FFFFFF;
+}
+
+
+.content {
+    text-align: center;
+    width: 80%;
+    padding: 10px;
+    margin: 10%;
+}
+
+.button {
+
+    color: #FFFFFF;
+    background-color: #D31E27;
+    padding: 10px;
+
+}
