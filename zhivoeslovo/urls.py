@@ -18,5 +18,5 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^zhivoeslovo/', include('zh_slovo.urls', namespace="begin_dict")),
+    url(r'^zhivoeslovo/', include('zh_slovo.urls', namespace="choose_dict")),
 ]

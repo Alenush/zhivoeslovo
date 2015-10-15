@@ -1,7 +1,7 @@
-from django.db import models
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #__author__ = 'alenush'
-# Create your models here.
+from django.db import models
 
 class Dict_text(models.Model):
     dic_origin_text = models.CharField(max_length=5000)

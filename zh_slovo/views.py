@@ -6,6 +6,21 @@ from django.template import RequestContext, loader
 from .models import Dict_text, Errors_in_text, Annotate_text
 import difflib, re
 
+from nltk.tokenize import WordPunctTokenizer
+
+
+def diff_strings2(sent1, sent2):
+    #word_punct_tokenizer = WordPunctTokenizer()
+    #s1 = word_punct_tokenizer.tokenize(sent1)
+    #s2 = word_punct_tokenizer.tokenize(sent2)
+    s1 = sent1.split(" ")
+    s2 = sent2.split(" ")
+    print sent1, sent2
+    d = difflib.Differ()
+    for i in zip(s1,s2):
+        diff =  d.compare(i[1], i[0])
+        print (''.join(diff)).replace("  ","")
+
 
 def diff_strings(sent1, sent2):
     """
@@ -82,12 +97,16 @@ def check_string(result):
 
 # ========SEND TO TEMPlATE ===============================
 
+def choose_dict(request):
+    return render(request,'zhivoeslovo.html')
+
 def begin_dict(request):
     return render(request,'write_dict.html')
 
 
 def count_results(request):
     if request.method == 'POST':
+        #diff_strings2(sent1=u"Речка бежала в великих молчаливых необозримых лесах, и от их однообразия казалось, что путь будет длиться вечно.", sent2=u"Речка бижала в великих, молчаливых, необозримых лесах, и от их однообразия казалось что путь будет длиться вечно.")
         user_text = request.POST.get("dict_text") #what user wrote
         original_text = Dict_text.objects.get() #first text. Check if None!!
         result = diff_strings(user_text, original_text.dic_origin_text)
