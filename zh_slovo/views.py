@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from django.template import RequestContext, loader
 from .models import Dict_text, Errors_in_text, Annotate_text
 import difflib, re
+from collections import Counter
 
 from nltk.tokenize import WordPunctTokenizer
 
@@ -93,6 +94,29 @@ def check_string(result):
         errors, user_string = normalize_string(result)
         dic_with_error_info = check_error_base(errors)
         return (user_string, errors, dic_with_error_info)
+
+
+def take_mark(errors):
+    """
+    Function takes an array of types of errors and returns mark
+    :param errors: errors = ["PU", "OR", "OR", "OR", "PU", "OR"]
+    :return:mark = 5
+    """
+    mark = 2
+    count = Counter(errors)
+    p = count["PU"]
+    o = count["OR"]
+    five = [(0,0), (0,1)]
+    four = [(0,2),(0,3),(0,4),(1,0),(1,1), (1,2), (1,3), (2,0), (2,1), (2,2)]
+    three = [(0,5),(0,6),(0,7),(0,8),(1,4),(1,5), (1,6), (1,7), (2,3), (2,4), (2,5),(2,6),
+        (3,0),(3,1),(3,2),(3,3),(3,4),(3,5),(4,0),(4,1),(4,2),(4,3),(4,4)]
+    if (o,p) in five:
+        mark = 5
+    elif (o,p) in four:
+        mark = 4
+    elif (o,p) in three:
+        mark = 3
+    return mark
 
 
 # ========SEND TO TEMPlATE ===============================
