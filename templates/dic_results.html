@@ -2,25 +2,6 @@
 
 {% block content %}
 
-    <h3>Текст пользователя:</h3>
-    <p> {{ answer }} </p>
-
-    <h3>Ошибки</h3>
-    <p>
-        {% for er in errors %}
-            {{ er }}
-         {% endfor %}
-        <br>
-        {% for in in error_info %}
-                    {% for i in in %}
-                    {{ i.error_variant }}
-                    {{ i.type_of_error }}
-                    {{ i.comments_to_error }}
-                    <br>
-                {% endfor %}
-        {% endfor %}
-    </p>
-
-    <p>Ваша Оценка 2!</p>
+    <input type="submit" class="button"  name="Отправить результаты Живому слову">
 
 {% endblock %}

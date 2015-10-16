@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #__author__ = 'alenush'
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, render_to_response
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
-from .models import Dict_text, Errors_in_text, Annotate_text
-import difflib, re
+from .models import Dict_text, Errors_in_text, Annotate_text, User_text
+import difflib, re, random, simplejson
 from collections import Counter
 
 from nltk.tokenize import WordPunctTokenizer
@@ -96,13 +97,12 @@ def check_string(result):
         return (user_string, errors, dic_with_error_info)
 
 
-def take_mark(errors):
+def return_user_grade(errors):
     """
     Function takes an array of types of errors and returns mark
     :param errors: errors = ["PU", "OR", "OR", "OR", "PU", "OR"]
-    :return:mark = 5
+    :return: string with user grade or См.
     """
-    mark = 2
     count = Counter(errors)
     p = count["PU"]
     o = count["OR"]
@@ -111,12 +111,23 @@ def take_mark(errors):
     three = [(0,5),(0,6),(0,7),(0,8),(1,4),(1,5), (1,6), (1,7), (2,3), (2,4), (2,5),(2,6),
         (3,0),(3,1),(3,2),(3,3),(3,4),(3,5),(4,0),(4,1),(4,2),(4,3),(4,4)]
     if (o,p) in five:
-        mark = 5
+        return u"5"
     elif (o,p) in four:
-        mark = 4
+        return u"4"
     elif (o,p) in three:
-        mark = 3
-    return mark
+        return u"3"
+    else:
+        return u"См."
+
+
+def add_hash_number():
+    """
+    Add hash to user answer.
+    :return:
+    """
+    hash = random.getrandbits(128)
+    print "%032x" % hash
+    return "%032x"%hash
 
 
 # ========SEND TO TEMPlATE ===============================
@@ -130,13 +141,29 @@ def begin_dict(request):
 
 def count_results(request):
     if request.method == 'POST':
-        #diff_strings2(sent1=u"Речка бежала в великих молчаливых необозримых лесах, и от их однообразия казалось, что путь будет длиться вечно.", sent2=u"Речка бижала в великих, молчаливых, необозримых лесах, и от их однообразия казалось что путь будет длиться вечно.")
         user_text = request.POST.get("dict_text") #what user wrote
+        user_hash = add_hash_number()
+        #Save user info
+        user_info = User_text(user_id = user_hash, user_text = user_text)
+        user_info.save()
+
         original_text = Dict_text.objects.get() #first text. Check if None!!
         result = diff_strings(user_text, original_text.dic_origin_text)
         answer = check_string(result)
-        if isinstance(answer, tuple):
-            send_user, errors, error_dic = answer[0], answer[1], answer[2]
-            return render(request,'dic_results.html', {"answer": send_user, "errors": errors, "error_info":error_dic})
-        else:
-            return render(request,'dic_results.html', {"answer": answer})
+
+        word_id, comment, error_type = 1, u"Чк,Чн пишется без мягкого знака!", "OR"
+        grade = 5 #return_user_grade(errors)
+
+        t = loader.get_template('dic_results.html')
+        results = {"grade": grade, "mistakes": { "word_id": word_id,"comment": comment, "error_type": error_type},
+                   "user_text":user_text, "confirmation": user_hash}
+        json = simplejson.dumps(results)
+        c = RequestContext(request, json)
+        return HttpResponse(json, content_type='application/json')
+        #return HttpResponse(t.render(c), content_type="application/json")
+        #return render_to_response('dic_results.html', json, content_type="application/json")
+        #if isinstance(answer, tuple):
+        #   send_user, errors, error_dic = answer[0], answer[1], answer[2]
+        #    return render(request,'dic_results.html', {"answer": user_text, "errors": errors, "error_info":error_dic})
+        #else:
+        #    return render(request,'dic_results.html', {"answer": answer})

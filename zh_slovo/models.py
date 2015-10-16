@@ -13,6 +13,7 @@ class Annotate_text(models.Model):
     words_of_text = models.CharField(max_length=100)
     text_number = models.IntegerField(default=0)
 
+
 class Errors_in_text(models.Model):
     ORFO = 'OR'
     PUNKT = "PU"
@@ -26,3 +27,8 @@ class Errors_in_text(models.Model):
     comments_to_error = models.CharField(max_length=500)
     type_of_error = models.CharField(max_length=7, choices=ERRORS, default=ORFO)
     text_number = models.IntegerField(default=0)
+
+
+class User_text(models.Model):
+    user_id = models.CharField(max_length=100)
+    user_text = models.CharField(max_length=500)

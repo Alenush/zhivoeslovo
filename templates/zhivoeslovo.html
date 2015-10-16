@@ -6,6 +6,7 @@
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/zhslovo_style.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/main_style.css' /%}">
+    <script type="text/javascript" src="{% static 'zh_slovo/jquery-1.11.3.js' %}"></script>
 
 </head>
 <body>
@@ -14,7 +15,7 @@
 
 {% block header %}
 <header class="page-header">
-                				<a class="header-logo" title="На главную" rel="home" href="http://totaldict.ru/">Тотальный диктант</a>
+            <a class="header-logo" title="На главную" rel="home" href="http://totaldict.ru/">Тотальный диктант</a>
 			</header>
 
             {% endblock %}
