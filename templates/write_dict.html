@@ -1,15 +1,104 @@
-{% extends "zhivoeslovo.html" %}
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Живое слово</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/zhslovo_style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/main_style.css' /%}">
+    <script type="text/javascript" src="{% static 'zh_slovo/jquery-1.11.3.js' %}"></script>
 
-    {% block content %}
+</head>
+<body>
 
-    <div class="content">
-    <form action="/zhivoeslovo/results" method="post">
-        {% csrf_token %}
+<div>
+
+{% block header %}
+<header class="page-header">
+            <a class="header-logo" title="На главную" rel="home" href="http://totaldict.ru/">Тотальный диктант</a>
+			</header>
+
+            {% endblock %}
+
+    <script>
+        jQuery(function($){
+
+            $('#dictation').submit(function(event){
+                event.preventDefault();
+                //$("<img>").attr('alt', "Ждите ответа").appendTo("#dictation")
+                $.getJSON("/zhivoeslovo/ajax/results", $("#dictation").serialize(), function(result){
+                    $('#dictation').remove();
+                    $.each(result, function(key, value){
+                        $('<p>').text(key + ":" + value).appendTo('.content')
+                    })
+                })
+            });
+
+        });
+    </script>
+
+     {% block content %}
+
+     <div class="content">
+    <form action="/zhivoeslovo/ajax/results" method="get" id="dictation">
+        <!--{% csrf_token %} -->
         <p>Писать диктант сюда:</p>
         <p><textarea rows="10" cols="55" name="dict_text"></textarea></p>
-        <input type="submit" class = "button" value="Проверить">
+        <input type="submit" class = "button" id="Check" value="Проверить">
     </form>
+
     </div>
 
+
     {% endblock %}
+
+
+			<footer>
+
+            {% block footer %}
+				<nav>
+			<dl class="footer-menu">
+			<dt><a href="http://totaldict.ru/about/"
+			       class="footer-menu-item">О проекте</a></dt>
+									<dd><a href="http://totaldict.ru/about/history/" class="footer-submenu-item">История</a></dd>
+											<dd><a href="http://totaldict.ru/about/principles/" class="footer-submenu-item">Принципы</a></dd>
+											<dd><a href="http://totaldict.ru/about/team/" class="footer-submenu-item">Команда</a></dd>
+											<dd><a href="http://totaldict.ru/about/experts/" class="footer-submenu-item">Экспертная комиссия</a></dd>
+											<dd><a href="http://totaldict.ru/about/faq/" class="footer-submenu-item">FAQ</a></dd>
+							</dl>
+			<dl class="footer-menu">
+			<dt><a href="http://totaldict.ru/texts/"
+			       class="footer-menu-item">Тексты</a></dt>
+									<dd><a href="http://totaldict.ru/online/texts" class="footer-submenu-item">Тексты диктантов</a></dd>
+							</dl>
+			<dl class="footer-menu">
+			<dt><a href="http://totaldict.ru/media/"
+			       class="footer-menu-item">Медиа</a></dt>
+									<dd><a href="http://totaldict.ru/media/photo/" class="footer-submenu-item">Фото</a></dd>
+											<dd><a href="http://totaldict.ru/media/video/" class="footer-submenu-item">Видео</a></dd>
+											<dd><a href="http://totaldict.ru/media/press/" class="footer-submenu-item">Пресса о нас</a></dd>
+											<dd><a href="http://totaldict.ru/media/statistics/" class="footer-submenu-item">Статистика</a></dd>
+							</dl>
+			<dl class="footer-menu">
+			<dt><a href="index.html"
+			       class="footer-menu-item">Написать диктант онлайн</a></dt>
+					</dl>
+			<dl class="footer-menu">
+			<dt><a href="http://totaldict.ru/newcities/"
+			       class="footer-menu-item">Стать организатором</a></dt>
+					</dl>
+	</nav>				<address>
+					<span class="copyright">&copy; 2004–2015, «Тотальный диктант»</span> <br />
+					Всероссийская акция по проверке грамотности. Интерактивные диктанты
+				</address>
+            {% endblock %}
+			</footer>
+
+</div>
+
+
+</body>
+</html>
+
+
 

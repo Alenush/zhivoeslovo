@@ -1,10 +1,9 @@
 from django.contrib import admin
 
-from .models import Dict_text, Annotate_text, Errors_in_text, User_text
+from .models import Dict_text, Answer_user, Errors_table
 
 
 # Register your models here.
 admin.site.register(Dict_text)
-admin.site.register(Annotate_text)
-admin.site.register(Errors_in_text)
-admin.site.register(User_text)
+admin.site.register(Errors_table)
+admin.site.register(Answer_user)
