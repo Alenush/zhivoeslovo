@@ -11,31 +11,43 @@ from collections import Counter
 from nltk.tokenize import WordPunctTokenizer
 
 
-def diff_strings2(sent1, sent2):
+def tokenize_sentence(sent1, sent2):
     #word_punct_tokenizer = WordPunctTokenizer()
     #s1 = word_punct_tokenizer.tokenize(sent1)
     #s2 = word_punct_tokenizer.tokenize(sent2)
-    s1 = sent1.split(" ")
-    s2 = sent2.split(" ")
-    print sent1, sent2
-    d = difflib.Differ()
-    diff_arr = []
-    for i in zip(s1,s2):
-        diff = d.compare(i[1], i[0])
-        diff_arr.append((''.join(diff)).replace("  ",""))
-    return diff_arr
+    pass
 
 
-def diff_strings(sent1, sent2):
+def check_errors_in_db(result):
+    """
+    Function takes from diff resuls (array with ("equal, a1,a2, b1,b2") )
+    :param result:
+    :return: array from (error-object, tok_begin for error tok_end)
+    """
+    dictation = Dict_text.objects.get()
+    origin, dic_id = dictation.dic_origin_text, dictation.id
+    errors = []
+    for op, a1, a2, b1, b2 in result:
+        if op != "equal":
+            er_object = Errors_table.objects.filter(id_dict=dic_id,symbol_place_in_sent=a1)
+            if len(er_object) != 0:
+                object_dic = er_object.values()[0]
+                tok_begin, tok_end = object_dic["token_border_begin"], object_dic["token_border_end"]
+                errors.append((er_object, tok_begin, tok_end))
+    return errors
+
+
+def diff_strings(user, origin):
     """
     Function aligns two strings.
     :param sent1: sentence user
     :param sent2: sentence origin
     :return: sentence with + -. - delete, + add right
     """
-    d = difflib.Differ()
-    diff = d.compare(sent1, sent2)
-    result = (''.join(diff)).replace(u"  ", u"")
+    dif = difflib.SequenceMatcher(unicode.isspace, origin, user)
+    print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
+    result = dif.get_opcodes()
+    print check_errors_in_db(result)
     return result
 
 
@@ -151,25 +163,31 @@ def add_hash_number():
 def begin_dict(request):
     dictation = Dict_text.objects.get()
     link = dictation.video_link
+    data = dictation.data
+    print data, "Data_time"
     return render(request,'write_dict.html', {"video":link})
 
 
 def count_results(request):
     if request.method == 'GET':
         user_text = request.GET.get("dict_text") #what user wrote
+        original_text = Dict_text.objects.get()
+        result = diff_strings(user_text, original_text.dic_origin_text)
+
+        answer, grade = check_string(result)
+
         user_hash = add_hash_number()
         #Save user info
         #user_info = User_text(user_id = user_hash, user_text = user_text)
         #user_info.save()
 
-        original_text = Dict_text.objects.get() #first text. Check if None!!
-        result = diff_strings2(user_text, original_text.dic_origin_text) #array with текст с + и -
-        answer, grade = check_string(result)
-        #print answer, grade
-        word_id, comment, error_type = 1, u"Чк,Чн пишется без мягкого знака!", "OR"
-
-        results = {"grade": grade, "mistakes": [{ "word_id": word_id,"comment": comment, "error_type": error_type}],
-                   "user_text":user_text, "confirmation": user_hash}
+        markup = []
+        next_date = "10.11.15"
+        next_time = "20:00"
+        p_er = 1
+        or_er = 1
+        results = {"grade": grade, "confirmation": user_hash,  "next_date": next_date, "next_time": next_time,
+                   "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
         json = simplejson.dumps(results)
         return HttpResponse(json, content_type='application/json')
 
