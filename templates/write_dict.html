@@ -20,12 +20,15 @@
 
             {% endblock %}
 
+
+     {% block content %}
+
     <script>
         jQuery(function($){
 
             $('#dictation').submit(function(event){
                 event.preventDefault();
-                //$("<img>").attr('alt', "Ждите ответа").appendTo("#dictation")
+                $("<img>").attr('alt', "Ждите ответа").appendTo("#dictation")
                 $.getJSON("/zhivoeslovo/ajax/results", $("#dictation").serialize(), function(result){
                     $('#dictation').remove();
                     $.each(result, function(key, value){
@@ -37,11 +40,13 @@
         });
     </script>
 
-     {% block content %}
 
      <div class="content">
     <form action="/zhivoeslovo/ajax/results" method="get" id="dictation">
-        <!--{% csrf_token %} -->
+        {% csrf_token %}
+
+        <iframe width="420" height="315" src="{{ video }}?rel=0" allowFullScreen></iframe>
+
         <p>Писать диктант сюда:</p>
         <p><textarea rows="10" cols="55" name="dict_text"></textarea></p>
         <input type="submit" class = "button" id="Check" value="Проверить">

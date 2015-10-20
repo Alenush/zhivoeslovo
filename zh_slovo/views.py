@@ -149,7 +149,9 @@ def add_hash_number():
 
 
 def begin_dict(request):
-    return render(request,'write_dict.html')
+    dictation = Dict_text.objects.get()
+    link = dictation.video_link
+    return render(request,'write_dict.html', {"video":link})
 
 
 def count_results(request):
@@ -163,9 +165,7 @@ def count_results(request):
         original_text = Dict_text.objects.get() #first text. Check if None!!
         result = diff_strings2(user_text, original_text.dic_origin_text) #array with текст с + и -
         answer, grade = check_string(result)
-        print answer, grade
-
-
+        #print answer, grade
         word_id, comment, error_type = 1, u"Чк,Чн пишется без мягкого знака!", "OR"
 
         results = {"grade": grade, "mistakes": [{ "word_id": word_id,"comment": comment, "error_type": error_type}],
