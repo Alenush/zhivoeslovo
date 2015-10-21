@@ -7,7 +7,7 @@ from django.db import models
 class Dict_text(models.Model):
     dic_origin_text = models.CharField(max_length=5000)
     video_link = models.URLField()
-    data = models.DateTimeField(auto_now_add=True) #do smth with this field!!!!
+    data = models.DateTimeField() #do smth with this field!!!!
     dict_name = models.CharField(max_length=100)
 
 
