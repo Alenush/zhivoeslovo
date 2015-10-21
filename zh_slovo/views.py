@@ -18,7 +18,6 @@ def tokenize_sentence(sent1, sent2):
     pass
 
 
-
 def check_errors_in_db(result):
     """
     Find, where !=equal
@@ -45,27 +44,33 @@ def orig_to_user(result):
     # для диапазонов в user берём крайнюю левую координату
     #переводит координату одного символа из ориг в юсер
     orig2user = {}
-    for op, o1, o2, u1, u2 in result:
-        orig2user[o1,o2] = (u1,u2)
+    for tup in result:
+        for i, j in zip(range(tup[1], tup[2]+1), range(tup[3], tup[4]+1)):
+            orig2user[i] = j
+    print orig2user
     return orig2user
 
 
 def token_borders2user(origin2user, errors):
-    #перевести границы токена в координаты user
+    """перевести границы токена в координаты user
+    :return:user_er_tokens: массив. границы токенов с ошибкой у пользователя
+    """
+    user_er_tokens = []
     for error in errors:
-        print error[1], error[2]
-        #print origin2user[error[1]]
-        #print origin2user[error[2]]
+        user_er_tokens.append((origin2user[error[1]], origin2user[error[2]]))
+    print user_er_tokens
+    return user_er_tokens
 
 
-def fill_user_arrays(user_borders,errors):
+def fill_user_arrays(user_borders, errors):
     """
     заводим список из кучи []; проходим по найденным диапазонам в координатах user,
     и дописываем в каждый [] по этим координатам описания ошибок, соответствующие этому диапазону
     :return:
     """
-    array = [[]]
-    print array*len(user_borders)
+    array = [[]]*10
+
+
 
 #- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
 # из каждой цепочки идущих подряд букв, имеющих одинаковые ошибки
@@ -86,7 +91,8 @@ def diff_strings(user, origin):
     result = dif.get_opcodes()
     origin2user = orig_to_user(result) # dictionary of orig to user match
     errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
-    user_borders = token_borders2user(origin2user, errors)
+    user_borders = token_borders2user(origin2user, errors) # user tokens with errors
+    fill_user_arrays(user_borders, errors)
     return result
 
 
