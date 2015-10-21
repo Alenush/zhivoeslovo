@@ -18,8 +18,10 @@ def tokenize_sentence(sent1, sent2):
     pass
 
 
+
 def check_errors_in_db(result):
     """
+    Find, where !=equal
     Function takes from diff resuls (array with ("equal, a1,a2, b1,b2") )
     :param result:
     :return: array from (error-object, tok_begin for error tok_end)
@@ -34,7 +36,42 @@ def check_errors_in_db(result):
                 object_dic = er_object.values()[0]
                 tok_begin, tok_end = object_dic["token_border_begin"], object_dic["token_border_end"]
                 errors.append((er_object, tok_begin, tok_end))
+    #if more than ? return СМ,
     return errors
+
+
+def orig_to_user(result):
+    #строим словарь orig2user, координатами в user для каждого символа orig;
+    # для диапазонов в user берём крайнюю левую координату
+    #переводит координату одного символа из ориг в юсер
+    orig2user = {}
+    for op, o1, o2, u1, u2 in result:
+        orig2user[o1,o2] = (u1,u2)
+    return orig2user
+
+
+def token_borders2user(origin2user, errors):
+    #перевести границы токена в координаты user
+    for error in errors:
+        print error[1], error[2]
+        #print origin2user[error[1]]
+        #print origin2user[error[2]]
+
+
+def fill_user_arrays(user_borders,errors):
+    """
+    заводим список из кучи []; проходим по найденным диапазонам в координатах user,
+    и дописываем в каждый [] по этим координатам описания ошибок, соответствующие этому диапазону
+    :return:
+    """
+    array = [[]]
+    print array*len(user_borders)
+
+#- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
+# из каждой цепочки идущих подряд букв, имеющих одинаковые ошибки
+
+#- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
+# сколько хотя бы одну пунктуационную; эти числа и называем числом ошибок
 
 
 def diff_strings(user, origin):
@@ -47,81 +84,10 @@ def diff_strings(user, origin):
     dif = difflib.SequenceMatcher(unicode.isspace, origin, user)
     print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
     result = dif.get_opcodes()
-    print check_errors_in_db(result)
+    origin2user = orig_to_user(result) # dictionary of orig to user match
+    errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
+    user_borders = token_borders2user(origin2user, errors)
     return result
-
-
-def normalize_string(word_with_error):
-    """
-    Collect the user errors.
-    :param string_with_error:
-    :return:
-    """
-    word = word_with_error.replace("+ ", "+"). replace("- ","-")
-    print word, "replace"
-    #words = string_with_error.split(" ")
-    #errors = []
-    #user_string = ""
-    #for word in words:
-    if "-" in word:
-            word = word[:word.index("-")]+word[word.index("-")+2:]
-            user_error_word = word.replace(u"+", u"").replace(u" ", u"")
-            #errors.append(user_error_word)
-            print user_error_word, "my_word"
-            return user_error_word
-            #user_string += user_error_word + " "
-    else:
-            if "+" in word:
-                error = word.replace("-", "")
-                #errors.append(error)
-                return error
-
-                #print error, "without -"
-                #user_string += error + " "
-            #else:
-                #user_string += word + ' '
-   # return errors #, user_string
-
-
-def check_error_base(errors):
-    """
-    Function check if such errors are in error database.
-    If yes - show type,comments and etc.
-    :param errors: array with words with errors
-    :return: array with dictionaries from database table. keys: error, type, comment
-    """
-    ar_error_infos = []
-    for error in errors:
-        print error, "ERROR"
-        accept_error = Errors_table.objects.filter(error_variant = error.lower())
-        ar_error_infos.append(accept_error.values('error_variant','type_of_error','comments_to_error'))
-    return ar_error_infos
-
-
-def send_error_to_db(error):
-    return ( "OR", "comment about error", 5)
-
-
-def check_string(result):
-    """
-    If too many + - then write user to rewrite a diktant.
-    :param:result: sentence with +-
-    :return:
-    """
-    result_words = [] # word or word_with_error:("OR", "com", place in sent)
-    errors = []
-    for word in result:
-        str_dif = re.findall(u"[+-]", word)
-        if len(str_dif) == 0: result_words.append(word)
-        else:
-            print word, "with error"
-            error = normalize_string(word)[0] #send to normilize error
-            errors_info = send_error_to_db(error)
-            type_of_error = errors_info[0]
-            result_words.append({error:errors_info})
-            errors.append(type_of_error)
-    grade = return_user_grade(errors)
-    return result_words, grade
 
 
 def return_user_grade(errors):
@@ -165,7 +131,7 @@ def begin_dict(request):
     link = dictation.video_link
     data = dictation.data
     print data, "Data_time"
-    return render(request,'write_dict.html', {"video":link})
+    return render(request,'write_dict.html', {"video":link, "dictations":data})
 
 
 def count_results(request):
@@ -173,8 +139,6 @@ def count_results(request):
         user_text = request.GET.get("dict_text") #what user wrote
         original_text = Dict_text.objects.get()
         result = diff_strings(user_text, original_text.dic_origin_text)
-
-        answer, grade = check_string(result)
 
         user_hash = add_hash_number()
         #Save user info
@@ -186,6 +150,7 @@ def count_results(request):
         next_time = "20:00"
         p_er = 1
         or_er = 1
+        grade = 5
         results = {"grade": grade, "confirmation": user_hash,  "next_date": next_date, "next_time": next_time,
                    "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
         json = simplejson.dumps(results)
@@ -194,3 +159,4 @@ def count_results(request):
 
 def send_good_result(request):
     pass
+
