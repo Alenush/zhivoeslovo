@@ -64,13 +64,19 @@ def token_borders2user(origin2user, errors):
 
 def fill_user_arrays(user_borders, errors):
     """
+    :param:user_borders: [token begin, token end]
+    :param:errors: array with (er_object, tok_begin, tok_end))
     заводим список из кучи []; проходим по найденным диапазонам в координатах user,
     и дописываем в каждый [] по этим координатам описания ошибок, соответствующие этому диапазону
     :return:
     """
-    array = [[]]*10
-
-
+    array = [[]]*50
+    for i in range(0, len(array)):
+        for teil in user_borders:
+            if i in range(teil[0],teil[1]+1):
+                array[i] = errors[user_borders.index(teil)][0]
+    print array
+    return array
 
 #- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
 # из каждой цепочки идущих подряд букв, имеющих одинаковые ошибки
@@ -92,7 +98,7 @@ def diff_strings(user, origin):
     origin2user = orig_to_user(result) # dictionary of orig to user match
     errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
     user_borders = token_borders2user(origin2user, errors) # user tokens with errors
-    fill_user_arrays(user_borders, errors)
+    fill_user_arrays(user_borders, errors) #array with [[][][][Error][][Error][Error]]
     return result
 
 
