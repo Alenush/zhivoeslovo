@@ -201,7 +201,7 @@ def send_good_result(request):
         user_city = request.GET.get("city")
         user_email = request.GET.get("email")
         user_hash = request.GET.get("confirmation")
-        user = Answer_user.object.get(id_hash=user_hash)
+        user = Answer_user.objects.get(id_hash=user_hash)
         user.username, user.age, user.sex, user.city, user.email = user_name, user_age, user_sex, user_city, user_email
         user.save()
         json = {}
