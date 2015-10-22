@@ -15,7 +15,7 @@ def check_errors_in_db(result):
     :param result:
     :return: array from (error-object, tok_begin for error tok_end)
     """
-    dictation = Dict_text.objects.get()
+    dictation = Dict_text.objects.get(pk=1)
     origin, dic_id = dictation.dic_origin_text, dictation.id
     errors = []
     for op, a1, a2, b1, b2 in result:
@@ -164,22 +164,22 @@ def add_hash_number():
 
 
 def begin_dict(request):
-    dictation = Dict_text.objects.get()
+    dictation = Dict_text.objects.get(pk=1)
     link = dictation.video_link
-    data = dictation.data
-    print data, "Data_time"
-    return render(request,'write_dict.html', {"video":link, "dictations":data})
+    all_dict = Dict_text.objects.all()
+    print all_dict, "Data_time"
+    return render(request,'write_dict.html', {"video":link, "dictations":all_dict})
 
 
 def count_results(request):
     if request.method == 'GET':
         user_text = request.GET.get("dict_text") #what user wrote
-        original_text = Dict_text.objects.get()
+        original_text = Dict_text.objects.get(pk=1) # id!!!
         result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
 
         user_hash = add_hash_number()
         #Save user info
-        #user_info = User_text(user_id = user_hash, user_text = user_text)
+        #user_info = User_text(user_id = user_hash, user_text = user_text) # + id_dict
         #user_info.save()
 
         next_date = "10.11.15"
@@ -191,5 +191,15 @@ def count_results(request):
 
 
 def send_good_result(request):
-    pass
+    if request.method == 'GET':
+        user_name = request.GET.get("name")
+        user_age = request.GET.get("age")
+        user_sex = request.GET.get("sex")
+        user_city = request.GET.get("city")
+        user_email = request.GET.get("email")
+        user_hash = request.GET.get("confirmation")
+        user = Answer_user.object.get(id_hash=user_hash) # = id_dict!
+        user.username, user.age, user.sex, user.city, user.email = user_name, user_age, user_sex, user_city, user_email
+        json = {}
+        return HttpResponse(json, content_type='application/json')
 

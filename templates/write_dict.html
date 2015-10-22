@@ -63,8 +63,13 @@
 
             {% block footer %}
 
-            {{ dictations }}
+            <ul> Даты диктантов:
+            {% for dict in dictations %}
 
+            <li>{{ dict.data }}</li>
+
+            {% endfor %}
+            </ul>
 
             {% endblock %}
 			</footer>
