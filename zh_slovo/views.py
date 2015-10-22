@@ -6,16 +6,6 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from .models import Dict_text, Errors_table, Answer_user
 import difflib, re, random, simplejson
-from collections import Counter
-
-from nltk.tokenize import WordPunctTokenizer
-
-
-def tokenize_sentence(sent1, sent2):
-    #word_punct_tokenizer = WordPunctTokenizer()
-    #s1 = word_punct_tokenizer.tokenize(sent1)
-    #s2 = word_punct_tokenizer.tokenize(sent2)
-    pass
 
 
 def check_errors_in_db(result):
@@ -72,9 +62,12 @@ def fill_user_arrays(user_borders, errors):
     """
     array = [[]]*50
     for i in range(0, len(array)):
+        all_errors = []
         for teil in user_borders:
+            er = errors[user_borders.index(teil)][0]
+            all_errors.append(er)
             if i in range(teil[0],teil[1]+1):
-                array[i] = errors[user_borders.index(teil)][0]
+                array[i] = all_errors
     print array
     return array
 
@@ -82,25 +75,27 @@ def fill_user_arrays(user_borders, errors):
 def collect_markup(parts_array, user_text):
     """- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
     из каждой цепочки идущих подряд букв, имеющих одинаковые ошибки
-    :param:parts_array:
     """
-    markup = {} #should be {"part_text":[errors],} errors -> (type_of_error, comments_to_error, right_answer)
+    markup = {}
     text_part = ""
     last_error = []
+    error_info = []
     for user, error in zip(user_text, parts_array):
         if error == last_error:
             text_part += user
         else:
             if last_error != []:
-                error_info = [{"type":last_error[0].type_of_error, "comment":last_error[0].comments_to_error, "right_answer":last_error[0].right_answer}]
-                markup[text_part] = error_info
+                for j in range(0,len(last_error)):
+                    error_info.append({"type":last_error[j][0].type_of_error, "comment":last_error[j][0].comments_to_error, "right_answer":last_error[j][0].right_answer})
+                    markup[text_part] = error_info
             else:
                 markup[text_part] = last_error
             text_part = user
             last_error = error
     markup[text_part] = last_error
-    print "MARK_UP", markup
+    print "MARK_UP: ", markup
     return markup
+
 
 def count_errors(markup):
     #- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
@@ -118,7 +113,7 @@ def count_errors(markup):
 
 def diff_strings(user, origin):
     """
-    Function aligns two strings.
+    Function aligns two strings. and make everything
     :param sent1: sentence user
     :param sent2: sentence origin
     :return: sentence with + -. - delete, + add right
