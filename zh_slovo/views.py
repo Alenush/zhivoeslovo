@@ -78,11 +78,42 @@ def fill_user_arrays(user_borders, errors):
     print array
     return array
 
-#- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
-# из каждой цепочки идущих подряд букв, имеющих одинаковые ошибки
 
-#- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
-# сколько хотя бы одну пунктуационную; эти числа и называем числом ошибок
+def collect_markup(parts_array, user_text):
+    """- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
+    из каждой цепочки идущих подряд букв, имеющих одинаковые ошибки
+    :param:parts_array:
+    """
+    markup = {} #should be {"part_text":[errors],} errors -> (type_of_error, comments_to_error, right_answer)
+    text_part = ""
+    last_error = []
+    for user, error in zip(user_text, parts_array):
+        if error == last_error:
+            text_part += user
+        else:
+            if last_error != []:
+                error_info = [{"type":last_error[0].type_of_error, "comment":last_error[0].comments_to_error, "right_answer":last_error[0].right_answer}]
+                markup[text_part] = error_info
+            else:
+                markup[text_part] = last_error
+            text_part = user
+            last_error = error
+    markup[text_part] = last_error
+    print "MARK_UP", markup
+    return markup
+
+def count_errors(markup):
+    #- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
+    # сколько хотя бы одну пунктуационную; эти числа и называем числом ошибок
+    OR = 0
+    PU = 0
+    for key in markup.keys():
+        for ar in markup[key]:
+            if "OR" in ar.values():
+                OR +=1
+            elif "PU" in ar.values():
+                PU += 1
+    return OR, PU
 
 
 def diff_strings(user, origin):
@@ -98,28 +129,27 @@ def diff_strings(user, origin):
     origin2user = orig_to_user(result) # dictionary of orig to user match
     errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
     user_borders = token_borders2user(origin2user, errors) # user tokens with errors
-    fill_user_arrays(user_borders, errors) #array with [[][][][Error][][Error][Error]]
-    return result
+    array_with_parts = fill_user_arrays(user_borders, errors) #array with [[][][][Error][][Error][Error]]
+    markup = collect_markup(array_with_parts, user)
+    or_er, p_er = count_errors(markup)
+    grade = return_user_grade(or_er, p_er)
+    return result, grade, or_er, p_er, markup
 
 
-def return_user_grade(errors):
+def return_user_grade(orph,punct):
     """
     Function takes an array of types of errors and returns mark
-    :param errors: errors = ["PU", "OR", "OR", "OR", "PU", "OR"]
     :return: string with user grade or См.
     """
-    count = Counter(errors)
-    p = count["PU"]
-    o = count["OR"]
     five = [(0,0)]
     four = [(0,1), (0,2),(0,3),(0,4),(1,0),(1,1), (1,2), (1,3), (2,0), (2,1), (2,2)]
     three = [(0,5),(0,6),(0,7),(0,8),(1,4),(1,5), (1,6), (1,7), (2,3), (2,4), (2,5),(2,6),
         (3,0),(3,1),(3,2),(3,3),(3,4),(3,5),(4,0),(4,1),(4,2),(4,3),(4,4)]
-    if (o,p) in five:
+    if (orph,punct) in five:
         return u"5"
-    elif (o,p) in four:
+    elif (orph,punct) in four:
         return u"4"
-    elif (o,p) in three:
+    elif (orph,punct) in three:
         return u"3"
     else:
         return u"См."
@@ -150,19 +180,15 @@ def count_results(request):
     if request.method == 'GET':
         user_text = request.GET.get("dict_text") #what user wrote
         original_text = Dict_text.objects.get()
-        result = diff_strings(user_text, original_text.dic_origin_text)
+        result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
 
         user_hash = add_hash_number()
         #Save user info
         #user_info = User_text(user_id = user_hash, user_text = user_text)
         #user_info.save()
 
-        markup = []
         next_date = "10.11.15"
         next_time = "20:00"
-        p_er = 1
-        or_er = 1
-        grade = 5
         results = {"grade": grade, "confirmation": user_hash,  "next_date": next_date, "next_time": next_time,
                    "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
         json = simplejson.dumps(results)
