@@ -71,6 +71,15 @@ def fill_user_arrays(user_borders, errors):
     print array
     return array
 
+def error2json(error):
+    """Convert error object to dictionary suitable for JSON.
+    """
+    return {
+        "type": error[0].type_of_error,
+        "comment": error[0].comments_to_error,
+        "right_answer": error[0].right_answer,
+    }
+
 
 def collect_markup(parts_array, user_text):
     """- проходим по zip(от этого списка и текста user), и собираем словари { text, errors }
@@ -84,15 +93,10 @@ def collect_markup(parts_array, user_text):
         if error == last_error:
             text_part += user
         else:
-            if last_error != []:
-                for j in range(0,len(last_error)):
-                    error_info.append({"type":last_error[j][0].type_of_error, "comment":last_error[j][0].comments_to_error, "right_answer":last_error[j][0].right_answer})
-                    markup[text_part] = error_info
-            else:
-                markup[text_part] = last_error
+            markup[text_part] = map(error2json, last_error)
             text_part = user
             last_error = error
-    markup[text_part] = last_error
+    markup[text_part] = map(error2json, last_error)
     print "MARK_UP: ", markup
     return markup
 
