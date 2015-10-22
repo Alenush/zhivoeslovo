@@ -1,4 +1,12 @@
-{% extends "zhivoeslovo.html" %}
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Живое слово</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/bootstrap/css/bootstrap.css' %}" />
+  <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/css/style.css' /%}">
+    <script type="text/javascript" src="{% static 'zh_slovo/jquery-1.11.3.js' %}"></script>
 
     {% block content %}
 <div class="wrapper">
@@ -84,7 +92,7 @@
            <iframe class="col-lg-12 video" src="https://www.youtube.com/embed/GD09BzAVYVw" allowfullscreen></iframe>
          </div>
          <div class="col-lg-6">
-           <form action="/zhivoeslovo/results" method="post">
+           <form action="/zhivoeslovo/ajax/results/" method="get">
              {% csrf_token %}
              <textarea name="dict_text" class="col-lg-12" id="id" placeholder="пишите диктант здесь"></textarea>
              <button class="white btn btn-danger button" type="submit" value="Проверить">
@@ -125,11 +133,42 @@
   </div>
     <!--<div class="content">
     <form action="/zhivoeslovo/results" method="post">
+
         {% csrf_token %}
+
         <p>Писать диктант сюда:</p>
         <p><textarea rows="10" cols="55" name="dict_text"></textarea></p>
-        <input type="submit" class = "button" value="Проверить">
+        <input type="submit" class = "button" id="Check" value="Проверить">
     </form>
-    </div>-->
+
+
+    </div>
+
+
+
     {% endblock %}
+
+
+			<footer>
+
+            {% block footer %}
+
+            <ul> Даты диктантов:
+            {% for dict in dictations %}
+
+            <li>{{ dict.data }}</li>
+
+            {% endfor %}
+            </ul>
+
+            {% endblock %}
+			</footer>
+
+</div>
+
+
+</body>
+</html>
+
+
 
