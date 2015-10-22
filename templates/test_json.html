@@ -1,0 +1,69 @@
+
+  
+{% extends "zhivoeslovo.html" %}
+    {% block content %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <style>
+    
+    .OR{
+      color:red;
+      cursor:pointer;
+    }
+    
+    .json_wrapper{
+        padding:90px;
+        width:100vw;
+        text-align:center;
+    }
+    </style>
+    
+    
+  <div class='json_wrapper'>
+  <div>
+  <p class="custom_text">нажми "пушми"</p>
+</div>
+<div class="rulez">
+  <p class="rulez">а потом на ошибку</p>
+</div>
+<div>
+  <p>тут будет твоя оценка <span class="mark"></span></p>
+</div>
+<div>
+  <button id="submit">пушми</button>
+</div>
+</div>
+
+
+<script>
+var count_of_mistakes=0
+var json_data = [ 'слово', 'слово', {word:"сливок", type:"OR", comment:"не не правильно", rigth_answer:"слово"},'слово', 'слово','слово','слово', {word:"сливок", type:"OR", comment:"пиши по-другому", rigth_answer:"слово"}]
+var mistakes = {}
+
+$(document).ready(function(){              
+  $('#submit').click(function(){
+      somelittlemagik();       
+  }) 
+}); 
+
+  var somelittlemagik=function(){
+  for (var i = 1; i <= json_data.length; i++) {
+    if (typeof json_data[i-1]=='object') {
+      count_of_mistakes++
+      mistakes['mistake'+count_of_mistakes]=json_data[i-1]
+      json_data[i-1] = '<span id="mistake'+count_of_mistakes+'" class="mistake '+json_data[i-1].type+'">'+json_data[i-1].word+'</span>'
+    };
+  };
+  var mistake = (json_data.join(' '))
+  $('.custom_text').html(''+mistake+'')
+    i_want_to_see_my_full()
+    console.log(mistakes)
+  }
+
+  var i_want_to_see_my_full=function(){
+    $('.mistake').click(function(){
+      var comment = mistakes[''+$(this)[0].id+''].comment
+      $('.rulez').text(''+comment+'')
+    })
+  }
+</script>
+  {% endblock %}

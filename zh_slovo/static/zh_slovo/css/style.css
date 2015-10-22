@@ -1,0 +1,113 @@
+body{
+  font-weight: 400; 
+}
+.row{
+  margin: 50px 0;
+}
+h1{
+  font-size: 56px;
+}
+h2{
+  font-size: 30px;
+  font-weight: 700;
+  margin: 0;
+  padding: 0;
+}
+.addtext{
+  font-size: 14px;
+}
+.main-text{
+  font-size: 20px;
+}
+.date{
+  font-size: 36px;
+  line-height: 1;
+}
+.date_actuale{
+  font-size: 60px;
+  line-height: 1;
+}
+.italic{
+  font-style: italic;
+}
+.bold{
+  font-weight: 700;
+}
+.center{
+  text-align: center;
+}
+.right{
+  text-align: right;
+}
+.left{
+  text-align: left;
+}
+.grey_block{
+  background-color: #e8e8e8;
+  padding: 50px 0;}
+}
+.white{
+  color: white;
+}
+.light_grey{
+  color: #777;
+}
+.dark_grey{
+  color: #333;
+}
+.red{
+  color:#cc3333;
+}
+.green{
+  color: green;
+}
+
+
+header .container{
+  padding: 0 0 30px;
+  border-bottom: 1px solid #c5cbd0;
+  background: url(../images/zh_sl.png) 0 0 no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+.logo{
+    margin: 18px 0 36px;
+    height: 46px;
+    background: url(../images/logo.png) 0 0 no-repeat;
+    background-size: contain;
+}
+.video, textarea{
+  height: 40vh;
+}
+.video{
+  border: none;
+}
+.button{
+float: right;
+display: block;
+}
+footer{
+  margin: 60px;
+  padding: 60px 0;
+  background: url(../images/footer.png) 0 0 no-repeat;
+  background-position: center;
+  background-size: cover;
+  /*background-attachment: fixed;*/
+}
+p{
+  margin: 0;
+  padding: 0;
+}
+.hide{
+  display: none;
+}
+
+
+
+
+.OR{
+  color:red;
+  cursor:pointer;
+}
+
+

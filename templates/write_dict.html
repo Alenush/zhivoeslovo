@@ -1,15 +1,135 @@
 {% extends "zhivoeslovo.html" %}
 
     {% block content %}
+<div class="wrapper">
+    <header>
+      <div class="container">
+        <div class="logo"></div>
+      </div>  
+    </header>
+    <div class="container exellent hide">
+      <div class="row">
+        <div class="col-md-6">
+          <p>Ваш идентификационный номер: <span class="bold key">45khfk83k;aj</span></p>
+          <h1>Поздравляем, ваша оценка</h1>
+          <p>Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold">23 ноября</span> и будет доступен с <span class="bold">13.00</span></p>
+        </div>
+      </div>
+      <div class="row">
+        <form role="form" class="col-md-6">
+          <div class="form-group">
+            <label for="name">Имя</label>
+            <input type="text" class="form-control" id="name">
+          </div>
+          <div class="form-group">
+            <label for="age">Возраст</label>
+            <input type="number" class="form-control" id="age">
+          </div>
+          <div class="form-group">
+            <div><label>Пол</label></div>
+            <label class="radio-inline"><input type="radio" name="optradio">мужской</label>
+            <label class="radio-inline"><input type="radio" name="optradio">женский</label>
+          </div>
+          <div class="form-group">
+            <label for="city">Город</label>
+            <input type="text" class="form-control" id="city">
+          </div>
+          <div class="form-group">
+            <label for="email">Адрес электронной службы</label>
+            <input type="email" class="form-control" id="email">
+          </div>
+          <div class="form-group">
+            <label for="key">Код</label>
+            <input type="text" class="form-control" id="key" value="45khfk83k;aj" disabled="disabled">
+          </div>
+          <div class="checkbox">
+            <label><input type="checkbox"> Remember me</label>
+          </div>
+          <button type="submit" class="white btn btn-danger button">Submit</button>
+        </form>
+      </div>
+    </div>
 
-    <div class="content">
+    <div class="container result hide ">
+      <div class="row">
+       <div class="col-md-8 col-md-offset-2 grey_block">
+        <div class="report center col-md-9 col-md-offset-1">
+          <h2 class="red" id="mark">Ваша оценка</h2>
+          <p><span>1</span> орфографическая и <span>1</span> пунктуационная ошибка</p>
+          <p>Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold">23 ноября</span> и будет доступен с <span class="bold">13.00</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="row main-text">
+      <div class="col-md-8">Душёй овладевает чувство, какое, вероятно, испытывал Одиссей,  когда плавал по незнакомому  морю и смутно предчувствовал встречи с необыкновенными существами.</div>
+      <div class="col-md-4">
+        <p class="right_spelling green">Душой</p>
+        <p class="rulez addtext">После «ж», «ч», «ш», «щ» для передачи ударного гласного «о» пишется буква «о» в окончаниях имен существительных: плечо, ножом, плечом, Ильичом, шалашом, плащом; межой, вожжой, свечой, душой (ПАС 18.1)</p>
+      </div>
+    </div>
+  </div> 
+     <div class="container dictation">
+     <div class="row">
+       <div class="col-lg-5 col-md-5 dark_grey">
+         <h2>Неударяемые гласные в&nbsp;суффиксах</h2>
+       </div>
+       <div class="col-lg-4 col-md-4 col-lg-offset-3 col-md-offset-3 right">
+         <p class="addtext italic">
+           читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина 
+         </p>
+       </div>
+     </div>
+     <div class="row">
+         <div class="col-lg-6">
+           <iframe class="col-lg-12 video" src="https://www.youtube.com/embed/GD09BzAVYVw" allowfullscreen></iframe>
+         </div>
+         <div class="col-lg-6">
+           <form action="/zhivoeslovo/results" method="post">
+             {% csrf_token %}
+             <textarea name="dict_text" class="col-lg-12" id="id" placeholder="пишите диктант здесь"></textarea>
+             <button class="white btn btn-danger button" type="submit" value="Проверить">
+               <span>Проверить</span><span>></span>
+             </button>
+           </form>
+         </div>
+     </div>
+   </div>
+    <footer class="container-fluid">
+      <div class="container">
+          <div class="row">
+            <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 col-md-offset-1 center red"><p class="date_actuale bold">29</p><p>ноября</p></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+    <!--<div class="content">
     <form action="/zhivoeslovo/results" method="post">
         {% csrf_token %}
         <p>Писать диктант сюда:</p>
         <p><textarea rows="10" cols="55" name="dict_text"></textarea></p>
         <input type="submit" class = "button" value="Проверить">
     </form>
-    </div>
-
+    </div>-->
     {% endblock %}
 

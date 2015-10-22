@@ -167,3 +167,5 @@ def count_results(request):
         #    return render(request,'dic_results.html', {"answer": user_text, "errors": errors, "error_info":error_dic})
         #else:
         #    return render(request,'dic_results.html', {"answer": answer})
+def test(request):
+    return render(request,'test_json.html')
