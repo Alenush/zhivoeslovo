@@ -180,11 +180,10 @@ def count_results(request):
         user_text = request.GET.get("dict_text") #what user wrote
         original_text = Dict_text.objects.get(pk=1) # id!!!
         result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
-
         user_hash = add_hash_number()
-        #Save user info
-        #user_info = User_text(user_id = user_hash, user_text = user_text) # + id_dict
-        #user_info.save()
+
+        user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text)
+        user_info.save()
 
         next_date = "10.11.15"
         next_time = "20:00"
@@ -202,16 +201,12 @@ def send_good_result(request):
         user_city = request.GET.get("city")
         user_email = request.GET.get("email")
         user_hash = request.GET.get("confirmation")
-        user = Answer_user.object.get(id_hash=user_hash) # = id_dict!
+        user = Answer_user.object.get(id_hash=user_hash)
         user.username, user.age, user.sex, user.city, user.email = user_name, user_age, user_sex, user_city, user_email
+        user.save()
         json = {}
         return HttpResponse(json, content_type='application/json')
-        #return HttpResponse(t.render(c), content_type="application/json")
-        #return render_to_response('dic_results.html', json, content_type="application/json")
-        #if isinstance(answer, tuple):
-        #   send_user, errors, error_dic = answer[0], answer[1], answer[2]
-        #    return render(request,'dic_results.html', {"answer": user_text, "errors": errors, "error_info":error_dic})
-        #else:
-        #    return render(request,'dic_results.html', {"answer": answer})
+
+
 def test(request):
     return render(request,'test_json.html')

@@ -34,11 +34,11 @@ class Answer_user(models.Model):
         (MASC, u'Мужчина'),
         (FEM, u'Женщина'),
     )
-    dict_id = models.IntegerField() #link to dict_id
+    dict_id = models.IntegerField(null=True) #link to dict_id
     user_text = models.CharField(max_length=500)
     username = models.CharField(max_length=100)
     id_hash = models.CharField(max_length=200)
-    email = models.EmailField()
-    age = models.IntegerField()
+    email = models.EmailField(null=True)
+    age = models.IntegerField(null=True)
     sex = models.CharField(max_length=7, choices=SEX, default=MASC)
     city = models.CharField(max_length=50)
