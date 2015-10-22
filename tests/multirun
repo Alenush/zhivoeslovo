@@ -1,15 +1,21 @@
-#!/bin/sh
+#!/bin/bash
 parallel="${parallel:-10}"
 count="${count:-200}"
 url="${url:-http://totaldict.ru:8086}"
 
 run () {
 	for n in `seq 1 "$parallel"`; do
-		./stress.py -u "$url" -n "$count" & 2>>errors.txt
+		./stress.py -u "$url" -n "$count" &>>errors.txt &
 	done
 	for n in `seq 1 "$parallel"`; do
 		wait
 	done
 }
 
-time -p run 2>>times.txt
+runstats () {
+	echo $url $parallel $count
+	time -p run
+}
+
+echo $url $parallel $count >> errors.txt
+echo `runstats 2>&1` >>benchmark.txt
