@@ -13,7 +13,9 @@ run () {
 }
 
 runstats () {
-	echo $url $parallel $count
+	echo [
+	date
+	echo ] $url $parallel $count
 	time -p run
 }
 
