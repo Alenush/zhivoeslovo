@@ -42,3 +42,4 @@ class Answer_user(models.Model):
     age = models.IntegerField(null=True)
     sex = models.CharField(max_length=7, choices=SEX, default=MASC)
     city = models.CharField(max_length=50)
+    grade = models.IntegerField(null=True)

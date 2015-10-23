@@ -123,7 +123,7 @@ def diff_strings(user, origin):
     :return: sentence with + -. - delete, + add right
     """
     dif = difflib.SequenceMatcher(unicode.isspace, origin, user)
-    print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
+    #print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
     result = dif.get_opcodes()
     origin2user = orig_to_user(result) # dictionary of orig to user match
     errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
@@ -182,7 +182,7 @@ def count_results(request):
         result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
         user_hash = add_hash_number()
 
-        user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text)
+        user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text, grade = grade)
         user_info.save()
 
         next_date = "10.11.15"
