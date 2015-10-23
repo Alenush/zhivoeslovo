@@ -37,7 +37,6 @@ def orig_to_user(result):
     for tup in result:
         for i, j in zip(range(tup[1], tup[2]+1), range(tup[3], tup[4]+1)):
             orig2user[i] = j
-    print orig2user
     return orig2user
 
 
@@ -48,7 +47,6 @@ def token_borders2user(origin2user, errors):
     user_er_tokens = []
     for error in errors:
         user_er_tokens.append((origin2user[error[1]], origin2user[error[2]]))
-    print user_er_tokens
     return user_er_tokens
 
 
@@ -68,7 +66,6 @@ def fill_user_arrays(user_borders, errors):
             all_errors.append(er)
             if i in range(teil[0],teil[1]+1):
                 array[i] = all_errors
-    print array
     return array
 
 def error2json(error):
@@ -97,7 +94,6 @@ def collect_markup(parts_array, user_text):
             text_part = user
             last_error = error
     markup[text_part] = map(error2json, last_error)
-    print "MARK_UP: ", markup
     return markup
 
 
@@ -123,7 +119,6 @@ def diff_strings(user, origin):
     :return: sentence with + -. - delete, + add right
     """
     dif = difflib.SequenceMatcher(unicode.isspace, origin, user)
-    #print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
     result = dif.get_opcodes()
     origin2user = orig_to_user(result) # dictionary of orig to user match
     errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
@@ -160,7 +155,6 @@ def add_hash_number():
     :return:
     """
     hash = random.getrandbits(128)
-    print "%032x" % hash
     return "%032x"%hash
 
 
@@ -171,7 +165,6 @@ def begin_dict(request):
     dictation = Dict_text.objects.get(pk=1)
     link = dictation.video_link
     all_dict = Dict_text.objects.all()
-    print all_dict, "Data_time"
     return render(request,'write_dict.html', {"video":link, "dictations":all_dict})
 
 
