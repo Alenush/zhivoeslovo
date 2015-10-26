@@ -89,11 +89,12 @@
      </div>
      <div class="row">
          <div class="col-lg-6">
-           <iframe class="col-lg-12 video" src="https://www.youtube.com/embed/GD09BzAVYVw" allowfullscreen></iframe>
+           <iframe class="col-lg-12 video" src="{{ video }}" allowfullscreen></iframe>
          </div>
          <div class="col-lg-6">
            <form action="/zhivoeslovo/ajax/results/" method="get">
              {% csrf_token %}
+             <input type="hidden" name = "{{ dict_id }}">
              <textarea name="dict_text" class="col-lg-12" id="id" placeholder="пишите диктант здесь"></textarea>
              <button class="white btn btn-danger button" type="submit" value="Проверить">
                <span>Проверить</span><span>></span>
@@ -103,6 +104,7 @@
      </div>
    </div>
     <footer class="container-fluid">
+      <script>next_date = "{{dictation.data}}"; next_id = "{{dictation.id}}";</script>
       <div class="container">
           <div class="row">
             <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
@@ -131,44 +133,7 @@
       </div>
     </footer>
   </div>
-    <!--<div class="content">
-    <form action="/zhivoeslovo/results" method="post">
 
-        {% csrf_token %}
-
-        <p>Писать диктант сюда:</p>
-        <p><textarea rows="10" cols="55" name="dict_text"></textarea></p>
-        <input type="submit" class = "button" id="Check" value="Проверить">
-    </form>
-
-
-    </div>
-
-
-
-    {% endblock %}
-
-
-			<footer>
-
-            {% block footer %}
-
-            <ul> Даты диктантов:
-            {% for dict in dictations %}
-
-            <li>{{ dict.data }}</li>
-
-            {% endfor %}
-            </ul>
-
-            {% endblock %}
-			</footer>
-
-</div>
-
-
-</body>
-</html>
-
+   {% endblock %}
 
 
