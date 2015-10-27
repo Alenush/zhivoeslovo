@@ -200,14 +200,15 @@ def begin_dict(request):
     dictation = Dict_text.objects.get(pk=1)
     link = dictation.video_link
     all_dict = Dict_text.objects.all()
-    print dictation, "Data_time"
-    return render(request,'write_dict.html', {"video":link, "dictation":dictation})
+    dict_name = dictation.dict_name
+    print dictation, "Data_time", dict_name, "DICT_NAME"
+    return render(request,'write_dict.html', {"video":link, "dictation":dictation, "dict_name":dict_name})
 
 
 def count_results(request):
     if request.method == 'GET':
-        user_text = request.GET.get("dict_text") #what user wrote
-        original_text = Dict_text.objects.get(pk=1) # id!!!
+        user_text = request.GET.get("dict_text")
+        original_text = Dict_text.objects.get(pk=1)
         result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
         user_hash = add_hash_number()
 
@@ -215,7 +216,7 @@ def count_results(request):
         user_info.save()
 
         next_date = "10.11.15"
-        next_time = "20:00"
+        next_time = "20:45"
         results = {"grade": grade, "confirmation": user_hash,  "next_date": next_date, "next_time": next_time,
                    "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
         json = simplejson.dumps(results)
