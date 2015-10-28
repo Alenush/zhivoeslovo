@@ -21,3 +21,4 @@ urlpatterns = [
     url(r'^zhivoeslovo/', include('zh_slovo.urls', namespace="begin_dict")),
 ]
 
+handler404 = 'zh_slovo.views.custom_404'
