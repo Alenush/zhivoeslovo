@@ -1,0 +1,16 @@
+@media (max-width: 992px) {
+  .right{
+    text-align: left;
+  }
+  .mar_top{
+    margin-top: 30px;
+  }
+ .five{
+   text-align:center;
+ }
+
+ h1{
+   font-size:56px;
+ }
+}
+

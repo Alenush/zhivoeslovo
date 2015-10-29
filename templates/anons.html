@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Живое слово</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/css/style.css' /%}">
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/adopt_style.css' /%}">
+   
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/js/antonJS.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
+   
+  
+    <div class="wrapper">
+        <header>
+          <div class="container">
+            <a href="http://totaldict.ru/"><div class="logo"></div></a>
+          </div>  
+        </header>
+
+        <div class="container next_dictation">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <h2>
+                Диктант начнется через:
+              </h2>
+              <div class='megatimer'>
+                <script src="http://megatimer.ru/s/22a4d4aba9aad0b240154da5da822818.js"></script>
+              </div>
+              <img src="{% static 'zh_slovo/images/anons_sova.jpg' %}"></img>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>
+
+
+
