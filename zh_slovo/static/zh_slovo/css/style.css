@@ -1,17 +1,100 @@
+/* основное */
 body{
   font-weight: 400; 
+}
+a, button{
+  -webkit-transition: all 150ms ease-in;
+  -moz-transition: all 150ms ease-in;
+  -o-transition: all 150ms ease-in;
+}
+.inline{
+  display: inline-block;
+}
+.hide{
+  display: none;
 }
 .row{
   margin: 50px 0;
 }
+.massage .row, footer, .grey_block, .megatimer, .standart_info, .mersy .row{
+  margin: 30px 0;
+}
+header .container{
+  padding: 0 0 5px;
+  border-bottom: 1px solid #c5cbd0;
+  background: url(../images/zh_sl.png) 0 0 no-repeat;
+  background-position: top center;
+  background-attachment: fixed;
+}
+footer{
+  margin: 50px;
+  margin-bottom:0;
+  background: url(../images/footer.png) 0 0 no-repeat;
+  background-position: center;
+  background-size: cover;
+  /*background-attachment: fixed;*/
+}
+.calendar div{
+  margin: 20px 0;
+}
+.act{
+   outline: white 3px solid;
+   margin-bottom: 50px;
+}
+.timetable{
+  border-bottom:1px solid white;
+  padding:15px;
+  margin-bottom:15px;
+  text-align:center;
+  color:white;
+}
+.logo{
+  margin: 18px 0 36px;
+  height: 46px;
+  background: url(../images/logo.png) 0 0 no-repeat;
+}
+
+textarea{
+  height: 196px;
+}
+.video{
+  border: none;
+  padding: 0;
+  height: 250px;
+  margin-bottom: 20px;
+}
+.button{
+float: right;
+display: block;
+margin: 20px 0;
+}
+.sova{
+  text-align:center;
+}
+.sad_owl{
+  width: 100%;
+}
+/* типографические стили */
 h1{
-  font-size: 56px;
+  font-size: 60px;
+}
+.sm h2{
+  margin-top:50px;
+  margin-bottom:20px ;
 }
 h2{
   font-size: 30px;
   font-weight: 700;
   margin: 0;
   padding: 0;
+}
+p{
+  margin: 0;
+  padding: 0;
+}
+.five{
+  font-size: 200px;
+  line-height: 180px;
 }
 .addtext{
   font-size: 14px;
@@ -23,16 +106,13 @@ h2{
   font-size: 36px;
   line-height: 1;
 }
-.date_actuale{
-  font-size: 60px;
-  line-height: 1;
-}
 .italic{
   font-style: italic;
 }
 .bold{
   font-weight: 700;
 }
+/* позиционирование */
 .center{
   text-align: center;
 }
@@ -42,10 +122,15 @@ h2{
 .left{
   text-align: left;
 }
+/* цвет фона */
+.btn-danger
+{
+  background-color: #de3b1b;
+}
 .grey_block{
   background-color: #e8e8e8;
-  padding: 50px 0;}
 }
+/* цвет текста */
 .white{
   color: white;
 }
@@ -56,58 +141,34 @@ h2{
   color: #333;
 }
 .red{
-  color:#cc3333;
+  color:#de3b1b;
 }
 .green{
   color: green;
 }
 
 
-header .container{
-  padding: 0 0 30px;
-  border-bottom: 1px solid #c5cbd0;
-  background: url(../images/zh_sl.png) 0 0 no-repeat;
-  background-position: center;
-  background-size: contain;
+#check_send{
+  background: white;
+  
+  text-align: left;
+  max-width: 400px;
+  margin: 40px auto;
+  position: relative;
 }
-.logo{
-    margin: 18px 0 36px;
-    height: 46px;
-    background: url(../images/logo.png) 0 0 no-repeat;
-    background-size: contain;
+.massage{
+  padding: 10px 30px;
 }
-.video, textarea{
-  height: 40vh;
+#yes, #close{
+  margin:0;
 }
-.video{
-  border: none;
-}
-.button{
-float: right;
-display: block;
-}
-footer{
-  margin: 60px;
-  padding: 60px 0;
-  background: url(../images/footer.png) 0 0 no-repeat;
-  background-position: center;
-  background-size: cover;
-  /*background-attachment: fixed;*/
-}
-p{
-  margin: 0;
-  padding: 0;
-}
-.hide{
-  display: none;
-}
-
-
-
 
 .OR{
-  color:red;
+  color:#de3b1b;;
   cursor:pointer;
 }
 
+.orthoErrorsInOriginText{
+  border-bottom:1px dotted red;
+}
 

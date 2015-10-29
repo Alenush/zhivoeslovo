@@ -5,135 +5,189 @@
     <title>Живое слово</title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/bootstrap/css/bootstrap.css' %}" />
-  <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/css/style.css' /%}">
-    <script type="text/javascript" src="{% static 'zh_slovo/jquery-1.11.3.js' %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/css/style.css' /%}">
+    <link rel="stylesheet" href="{% static 'zh_slovo/magnific-popup/dist/magnific-popup.css' %}">
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/adopt_style.css' /%}">
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/magnific.css' /%}">
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/preload.css' /%}">
 
-    {% block content %}
-<div class="wrapper">
-    <header>
-      <div class="container">
-        <div class="logo"></div>
-      </div>  
-    </header>
-    <div class="container exellent hide">
-      <div class="row">
-        <div class="col-md-6">
-          <p>Ваш идентификационный номер: <span class="bold key">45khfk83k;aj</span></p>
-          <h1>Поздравляем, ваша оценка</h1>
-          <p>Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold">23 ноября</span> и будет доступен с <span class="bold">13.00</span></p>
-        </div>
-      </div>
-      <div class="row">
-        <form role="form" class="col-md-6">
-          <div class="form-group">
-            <label for="name">Имя</label>
-            <input type="text" class="form-control" id="name">
-          </div>
-          <div class="form-group">
-            <label for="age">Возраст</label>
-            <input type="number" class="form-control" id="age">
-          </div>
-          <div class="form-group">
-            <div><label>Пол</label></div>
-            <label class="radio-inline"><input type="radio" name="optradio">мужской</label>
-            <label class="radio-inline"><input type="radio" name="optradio">женский</label>
-          </div>
-          <div class="form-group">
-            <label for="city">Город</label>
-            <input type="text" class="form-control" id="city">
-          </div>
-          <div class="form-group">
-            <label for="email">Адрес электронной службы</label>
-            <input type="email" class="form-control" id="email">
-          </div>
-          <div class="form-group">
-            <label for="key">Код</label>
-            <input type="text" class="form-control" id="key" value="45khfk83k;aj" disabled="disabled">
-          </div>
-          <div class="checkbox">
-            <label><input type="checkbox"> Remember me</label>
-          </div>
-          <button type="submit" class="white btn btn-danger button">Submit</button>
-        </form>
-      </div>
-    </div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/js/antonJS.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/js/main.js' %}"></script>
 
-    <div class="container result hide ">
-      <div class="row">
-       <div class="col-md-8 col-md-offset-2 grey_block">
-        <div class="report center col-md-9 col-md-offset-1">
-          <h2 class="red" id="mark">Ваша оценка</h2>
-          <p><span>1</span> орфографическая и <span>1</span> пунктуационная ошибка</p>
-          <p>Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold">23 ноября</span> и будет доступен с <span class="bold">13.00</span></p>
-        </div>
-      </div>
-    </div>
-    <div class="row main-text">
-      <div class="col-md-8">Душёй овладевает чувство, какое, вероятно, испытывал Одиссей,  когда плавал по незнакомому  морю и смутно предчувствовал встречи с необыкновенными существами.</div>
-      <div class="col-md-4">
-        <p class="right_spelling green">Душой</p>
-        <p class="rulez addtext">После «ж», «ч», «ш», «щ» для передачи ударного гласного «о» пишется буква «о» в окончаниях имен существительных: плечо, ножом, плечом, Ильичом, шалашом, плащом; межой, вожжой, свечой, душой (ПАС 18.1)</p>
-      </div>
-    </div>
-  </div> 
-     <div class="container dictation">
-     <div class="row">
-       <div class="col-lg-5 col-md-5 dark_grey">
-         <h2>{{ dict_name }}</h2>
-       </div>
-       <div class="col-lg-4 col-md-4 col-lg-offset-3 col-md-offset-3 right">
-         <p class="addtext italic">
-           читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина 
-         </p>
-       </div>
-     </div>
-     <div class="row">
-         <div class="col-lg-6">
-           <iframe class="col-lg-12 video" src="{{ video }}" allowfullscreen></iframe>
-         </div>
-         <div class="col-lg-6">
-           <form action="/zhivoeslovo/ajax/results/" method="get">
-             {% csrf_token %}
-             <input type="hidden" name = "{{ dict_id }}">
-             <textarea name="dict_text" class="col-lg-12" id="id" placeholder="пишите диктант здесь"></textarea>
-             <button class="white btn btn-danger button" type="submit" value="Проверить">
-               <span>Проверить</span><span>></span>
-             </button>
-           </form>
-         </div>
-     </div>
-   </div>
-    <footer class="container-fluid">
-      <script>next_date = "{{ next_date}}"; next_id = "{{next_id}}"; next_month = "{{ next_month }}"; next_time="{{next_time}}" ;</script>
-      <div class="container">
+    <div class="wrapper">
+        <header>
+          <div class="container">
+            <a href="http://totaldict.ru/"><div class="logo"></div></a>
+          </div>
+        </header>
+        <div class="container mersy hide">
           <div class="row">
-            <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+            <p class="col-sm-12">Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold nextDataTime">23 ноября</span> и будет доступен с <span class="bold nextTime">20:45</span></p>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+        <div class="container sm hide">
+          <div class="row">
+            <div class="col-sm-6"><img src="../static/zh_slovo/images/sad_owl.png" alt="sova" class="sad_owl"> </div>
+            <div class="col-sm-6">
+              <img src="../static/zh_slovo/images/sm.png" alt="sm">
+              <h2>«Даже в его молчании встречались грамматические ошибки»</h2>
+              <p class="right">Станислав Ежи Лец</p>
+
+            </div>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-md-2 col-md-offset-1 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
-            <div class="col-md-2 center"><p class="date">29</p><p>ноября</p></div>
+         <div class="container exellent hide">
+          <div class="row">
+            <div class="col-sm-6">
+              <h1>Поздравляем, ваша оценка</h1>
+            </div>
+            <div class="col-sm-6">
+              <p class="red five bold">5</p>
+            </div>
+          </div>
+          <div class="row"></div>
+          <div class="row">
+
+            <form role="form" class="col-sm-6" id = "exellentDictionForm" action="" method="GET">
+              <div class="form-group"><p>Если Вы хотите участвовать в съемках программы в студии, заполните, пожалуйста, анкету.</p></div>
+
+              <div class="form-group">
+                <label for="name">Имя</label>
+                <input type="text" class="form-control" id="name">
+              </div>
+              <div class="form-group">
+                <label for="age">Возраст</label>
+                <input type="number" min="0" max="100" class="form-control" id="age">
+              </div>
+              <div class="form-group">
+                <div><label>Пол</label></div>
+                <label class="radio-inline"><input type="radio" value="male" name="optradio">мужской</label>
+                <label class="radio-inline"><input type="radio" value="female" name="optradio">женский</label>
+              </div>
+              <div class="form-group">
+                <label for="city">Город</label>
+                <input type="text" class="form-control" id="city">
+              </div>
+              <div class="form-group">
+                <label for="edu">Образование</label>
+                <input type="text" class="form-control" id="edu">
+              </div>
+              <div class="form-group">
+                <label for="email">Адрес электронной службы</label>
+                <input type="email" class="form-control" id="email">
+              </div>
+              <div class="form-group">
+                <label for="key">Код</label>
+                <input type="text" class="form-control" id="key" readonly>
+              </div>
+              <button type="submit" class="white btn btn-danger button" id="pers_data_submit">Отправить</button>
+            </form>
+            <div class="col-sm-6 sova"><img src="../static/zh_slovo/images/sova.png" alt="sova"></div>
+          </div>
         </div>
-        <div class="row">
-            <div class="col-md-2 col-md-offset-1 center red"><p class="date_actuale bold">29</p><p>ноября</p></div>
+
+        <div class="container result hide">
+          <div class="row">
+           <div class="col-md-8 col-md-offset-2">
+            <div class="report center col-md-9 col-md-offset-1">
+              <h2 class="red" id="mark">Ваша оценка</h2>
+              <p><span id ="orthoErrors"></span> орфографическая и <span id ="punctErrors"></span> пунктуационная ошибка</p>
+            </div>
+          </div>
+        </div>
+        <div class="row main-text">
+          <div id="originalText" class="col-md-8  col-md-offset-0 col-xs-8  col-xs-offset-2">Душёй овладевает чувство, какое, вероятно, испытывал Одиссей,  когда плавал по незнакомому  морю и смутно предчувствовал встречи с необыкновенными существами.</div>
+          <div class="col-md-4 col-md-offset-0 col-xs-8 col-xs-offset-2 mar_top" id ="blockRules">
+            <div class="setOfRules">
+              <p class="right_spelling green">Душой</p>
+              <p class="rulez addtext">После «ж», «ч», «ш», «щ» для передачи ударного гласного «о» пишется буква «о» в окончаниях имен существительных: плечо, ножом, плечом, Ильичом, шалашом, плащом; межой, вожжой, свечой, душой (ПАС 18.1)</p>
+            </div>
+          </div>
+        </div>
+          </div>
+        <div class="container dictation">
+         <div class="row">
+           <div class="col-lg-5 col-md-5 col-sm-6 dark_grey" id="first_dictation">
+             <h2>{{ dict_name }}</h2>
+           </div>
+           <div class="col-lg-5 col-md-5 col-sm-10 col-lg-offset-2 col-md-offset-2 right">
+             <p class="addtext">
+               читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина
+             </p>
+           </div>
+         </div>
+         <div class="row">
+             <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
+               <iframe class="col-xs-12 video" src="{{video}}" allowfullscreen></iframe>
+             </div>
+             <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
+              <form  id = "dictionForm" action="/zhivoeslovo/ajax/results/" method="GET">
+                {% csrf_token %}
+                <input type="hidden" name = "{{ dict_id }}">
+                <textarea name ="dict_text" class="col-xs-12" spellcheck="false" id="custom_text" placeholder="пишите диктант здесь"></textarea>
+                <button type="submit" class="white btn btn-danger button bold" id="submit" data-effect="mfp-zoom-in">
+                  <div  class="inline">
+                    <p>Проверить</p>
+                  </div>
+                  <div class="inline ">
+                    <p class="glyphicon glyphicon-chevron-right"></p>
+                  </div>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <footer class="container-fluid">
+          <div class="container">
+              <div class="row">
+                  <div class="col-md-8 col-md-offset-2 calendar">
+                  <script> var next_date = "{{ next_date}}";var next_id = "{{next_id}}";var next_month = "{{ next_month }}";var next_time="{{next_time}}" ;</script>
+                  <h2 class=" timetable">Расписание диктантов</h2>
+                  <div class="col-md-2 col-xs-4 center red"><p class="date">2</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">3</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">5</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                </div>
+            </div>
+          </div>
+        </footer>
+        <div class="container">
+          <div class="row standart_info">
+            <div class="col-md-6">
+              <p>«Живое слово» и <a href="http://totaldict.ru/">«Тотальный диктант»</a>.</p>
+              <p>Совместный проект на канале «Культура»</p>
+            </div>
+          </div>
         </div>
       </div>
-    </footer>
-  </div>
-
-   {% endblock %}
-
-
+      <div id="check_send" class="white-popup mfp-hide mfp-with-anim">
+      <div class="massage">
+        <p class="bold">Внимание!</p>
+        <p class="row">Вы действительно закончили работу с текстом и готовы отправить его на проверку?</p>
+      </div>
+      <div>
+        <button class="white btn btn-danger button bold" id="yes">да</button>
+        <button class="btn button btn-default bold" id="close">нет</button>
+      </div>
+    </div>
+    <div class="preload hide">
+      <div class="cssload-preloader ">
+        <div class="cssload-preloader-box">   <div>ж</div>    <div>и</div>    <div>в</div>    <div>о</div>    <div>е</div>    <div> </div>    <div>с</div>    <div>л</div>    <div>о</div>    <div>в</div>    <div>о</div></div>
+      </div>
+    </div>
+  </body>
+</html>

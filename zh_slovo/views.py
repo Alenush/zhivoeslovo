@@ -80,14 +80,14 @@ def fill_user_arrays(user_borders, errors, dict_text):
     array = [[] for n in xrange(len(dict_text))]
     print "first array", array
     for i in range(0, len(array)):
-        all_errors = []
+        #all_errors = []
         for part in user_borders:
             er = errors[user_borders.index(part)][0]
             if i in range(part[0],part[1]+1):
-                all_errors.append(er)
-                array[i] = all_errors
-            print "all_errors", all_errors
-    print array
+                #all_errors.append(er)
+                array[i] = er
+        #print "all_errors", all_errors
+    print "ARRAY", array
     return array
 
 
@@ -95,9 +95,9 @@ def error2json(error):
     """Convert error object to dictionary suitable for JSON.
     """
     return {
-        "type": error[0].type_of_error,
-        "comment": error[0].comments_to_error,
-        "right_answer": error[0].right_answer,
+        "type": error.type_of_error,
+        "comment": error.comments_to_error,
+        "right_answer": error.right_answer,
     }
 
 
@@ -114,7 +114,11 @@ def collect_markup(parts_array, user_text):
         if error == last_error:
             text_part += user
         else:
+            print "LAST_ERROR", last_error, error
             answer = map(error2json, last_error)
+            print "ANSWER", answer
+            print "TEXT", text_part, user
+            if text_part == ' ': text_part=","
             dictionary["text"] = text_part
             dictionary["errors"] = answer
             markup.append(dictionary)
@@ -196,7 +200,7 @@ def add_hash_number():
 
 
 def find_date_now():
-    time_now = str(datetime.datetime.now()) #BUG. НЕ ТО ВРЕМЯ ТЕКУЩЕЕ! ЧТО ДЕЛАТЬ?!
+    time_now = str(datetime.datetime.now())
     date, time =  time_now.split(" ")[0], time_now.split(" ")[1][0:5]
     year, month, day = date.split("-")[0], date.split("-")[1], date.split("-")[2]
     return time, day, month, year
@@ -209,6 +213,7 @@ def compare_date(now_day, now_month, day, month):
             elif day_left == 0: return 0
             else: return day_left
 
+
 def find_days_left(day, month, year):
     factor = 365*year + day+ 31*(month-1)+((year-1)/4)-(3/4*((year-1)/100+1))
     return factor
@@ -217,7 +222,7 @@ def find_days_left(day, month, year):
 def select_date_time(object_dictionary):
     print "DICTIONARY", object_dictionary
     now_time, now_day, now_month, now_year = find_date_now()
-    print "NOW", now_time, now_day
+    now_day, now_month = "01", "11"
     days_left_now = find_days_left(int(now_day), int(now_month), int(now_year))
     dict_with_obj_dayleft = {}
     min_daysleft = 0
@@ -236,8 +241,16 @@ def select_date_time(object_dictionary):
         print "MIN!", min_daysleft
         dict_with_obj_dayleft[difference] = date_object
     next_date_ar = dict_with_obj_dayleft[min_daysleft]
-    print "LAST RESULT", next_date_ar.data, next_date_ar.id
     return next_date_ar.data, next_date_ar.id
+
+def normalize_user_text(user_text):
+    if user_text[0] == " ": user_text = user_text[1:]
+    print user_text
+    if user_text[-1] == " ": user_text = user_text[:-1]
+    print user_text
+    user_text = user_text.replace("  "," ").replace("!",".").replace("...",".").replace("?",".").replace(" - ", " ")
+    print user_text
+    return user_text
 
 
 # ========SEND TO TEMPlATE ===============================
@@ -245,13 +258,13 @@ def select_date_time(object_dictionary):
 
 def begin_dict(request):
         all_dict = Dict_text.objects.all()
-        print list(all_dict)
+        list_of_all_dict = []
         date_dictionary = {}
         for date_info in all_dict:
-            print "DATE_INFO", date_info
             string_of_date = str(date_info.data)
             date = string_of_date.split(" ")[0]
             time = string_of_date.split(" ")[1]
+            list_of_all_dict.append((date.split("-")[2],date.split("-")[1],date.split("-")[0], time[0:5], date_info.id))
             date_dictionary[date_info] = [date, time]
         next_date_time, next_id = select_date_time(date_dictionary)
         next_date = str(next_date_time).split(" ")[0]
@@ -260,49 +273,59 @@ def begin_dict(request):
         dictation = Dict_text.objects.get(pk=1)
         link = dictation.video_link
         dict_name = dictation.dict_name
-        print dictation, "Data_time", dict_name, "DICT_NAME"
         dict_id = 1
+        print "ALL_LIST_DICT", list_of_all_dict
         return render(request,'write_dict.html', {"video":link, "next_date":next_day, "next_month":next_month,
-                                                  "next_time":next_time, "next_id":next_id,
-                                                  "dict_name":dict_name, "dict_id":dict_id})
+                                                  "next_time":next_time[0:5], "next_id":next_id,
+                                                  "dict_name":dict_name, "dict_id":dict_id,
+                                                  "list_of_dict":list_of_all_dict})
 
 
 def count_results(request):
-        if request.method == 'GET':
-            user_text = request.GET.get("dict_text")
-            original_text = Dict_text.objects.get(pk=1)
-            result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
-            user_hash = add_hash_number()
+    if request.method == 'GET':
+        user_text = request.GET.get("dict_text")
+        user_text = normalize_user_text(user_text)
+        original_text = Dict_text.objects.get(pk=1)
+        result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
+        user_hash = add_hash_number()
 
-            user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text, grade = grade)
-            user_info.save()
+        user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text, grade = int(grade))
+        user_info.save()
 
-            next_date = "10.11.15"
-            next_time = "20:45"
-            results = {"grade": grade, "confirmation": user_hash,  "next_date": next_date, "next_time": next_time,
-                       "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
-            json = simplejson.dumps(results)
-            return HttpResponse(json, content_type='application/json')
-
+        results = {"grade": grade, "confirmation": user_hash,
+                   "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
+        json = simplejson.dumps(results)
+        return HttpResponse(json, content_type='application/json')
 
 
 def send_good_result(request):
     if request.method == 'GET':
-        user_name = request.GET.get("name")
+        user_name = request.GET.get("username")
         user_age = request.GET.get("age")
         user_sex = request.GET.get("sex")
         user_city = request.GET.get("city")
         user_email = request.GET.get("email")
         user_hash = request.GET.get("confirmation")
+        user_edu = request.GET.get("edu")
+        user_prof = request.GET.get("prof")
+        print user_name, user_prof
+        print user_age, user_city
+        print user_hash, user_edu
+        print user_sex
         user = Answer_user.objects.get(id_hash=user_hash)
+        print "USER EXIST", user
         user.username, user.age, user.sex, user.city, user.email = user_name, user_age, user_sex, user_city, user_email
         user.save()
         json = {}
         return HttpResponse(json, content_type='application/json')
-
-
-def test(request):
-    return render(request,'test_json.html')
+        
 
 def custom_404(request):
         return redirect('http://totaldict.ru/404')
+
+def test(request):
+    return render(request,'test_json.html')
+    
+    
+def anons(request):
+    return render(request,'anons.html')
