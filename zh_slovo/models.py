@@ -7,7 +7,7 @@ from django.db import models
 class Dict_text(models.Model):
     dic_origin_text = models.CharField(max_length=5000)
     video_link = models.URLField()
-    data = models.DateTimeField()
+    data = models.DateTimeField() #do smth with this field!!!!
     dict_name = models.CharField(max_length=100)
 
 
@@ -43,3 +43,5 @@ class Answer_user(models.Model):
     sex = models.CharField(max_length=7, choices=SEX, default=MASC)
     city = models.CharField(max_length=50)
     grade = models.IntegerField(null=True)
+    prof = models.CharField(max_length=500,null=True)
+    edu = models.CharField(max_length=500, null=True)

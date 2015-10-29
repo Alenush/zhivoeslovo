@@ -170,5 +170,6 @@ p{
 
 .orthoErrorsInOriginText{
   border-bottom:1px dotted red;
+  cursor: pointer;
 }
 

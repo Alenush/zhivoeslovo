@@ -10,7 +10,7 @@
     <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/adopt_style.css' /%}">
     <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/magnific.css' /%}">
     <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/preload.css' /%}">
-
+   
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'zh_slovo/js/antonJS.js' %}"></script>
     <script type="text/javascript" src="{% static 'zh_slovo/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
@@ -20,7 +20,7 @@
         <header>
           <div class="container">
             <a href="http://totaldict.ru/"><div class="logo"></div></a>
-          </div>
+          </div>  
         </header>
         <div class="container mersy hide">
           <div class="row">
@@ -34,7 +34,7 @@
               <img src="../static/zh_slovo/images/sm.png" alt="sm">
               <h2>«Даже в его молчании встречались грамматические ошибки»</h2>
               <p class="right">Станислав Ежи Лец</p>
-
+             
             </div>
           </div>
         </div>
@@ -49,45 +49,49 @@
           </div>
           <div class="row"></div>
           <div class="row">
-
-            <form role="form" class="col-sm-6" id = "exellentDictionForm" action="" method="GET">
+            
+            <form role="form" class="col-sm-6" id = "exellentDictionForm" action="/zhivoeslovo/ajax/send_results/" method="GET">
               <div class="form-group"><p>Если Вы хотите участвовать в съемках программы в студии, заполните, пожалуйста, анкету.</p></div>
-
+              
               <div class="form-group">
                 <label for="name">Имя</label>
-                <input type="text" class="form-control" id="name">
+                <input type="text" class="form-control" id="name" name="username">
               </div>
               <div class="form-group">
                 <label for="age">Возраст</label>
-                <input type="number" min="0" max="100" class="form-control" id="age">
+                <input type="number" min="0" max="100" class="form-control" id="age" name="age">
               </div>
               <div class="form-group">
                 <div><label>Пол</label></div>
-                <label class="radio-inline"><input type="radio" value="male" name="optradio">мужской</label>
-                <label class="radio-inline"><input type="radio" value="female" name="optradio">женский</label>
+                <label class="radio-inline"><input type="radio" value="male" name="sex">мужской</label>
+                <label class="radio-inline"><input type="radio" value="female" name="sex">женский</label>
               </div>
               <div class="form-group">
                 <label for="city">Город</label>
-                <input type="text" class="form-control" id="city">
+                <input type="text" class="form-control" id="city" name="city">
               </div>
               <div class="form-group">
                 <label for="edu">Образование</label>
-                <input type="text" class="form-control" id="edu">
+                <input type="text" class="form-control" id="edu" name="edu">
+              </div>
+              <div class="form-group">
+                <label for="prof">Профессия</label>
+                <input type="text" class="form-control" id="prof" name="prof">
               </div>
               <div class="form-group">
                 <label for="email">Адрес электронной службы</label>
-                <input type="email" class="form-control" id="email">
+                <input type="email" class="form-control" id="email" name="email">
               </div>
               <div class="form-group">
                 <label for="key">Код</label>
-                <input type="text" class="form-control" id="key" readonly>
+                <input type="text" class="form-control" id="key" name="confirmation" readonly>
               </div>
               <button type="submit" class="white btn btn-danger button" id="pers_data_submit">Отправить</button>
             </form>
             <div class="col-sm-6 sova"><img src="../static/zh_slovo/images/sova.png" alt="sova"></div>
           </div>
         </div>
-
+        
         <div class="container result hide">
           <div class="row">
            <div class="col-md-8 col-md-offset-2">
@@ -114,7 +118,7 @@
            </div>
            <div class="col-lg-5 col-md-5 col-sm-10 col-lg-offset-2 col-md-offset-2 right">
              <p class="addtext">
-               читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина
+               читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина 
              </p>
            </div>
          </div>
@@ -161,14 +165,14 @@
                   <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
                   <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
                   <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                </div>
+                </div> 
             </div>
           </div>
         </footer>
         <div class="container">
           <div class="row standart_info">
             <div class="col-md-6">
-              <p>«Живое слово» и <a href="http://totaldict.ru/">«Тотальный диктант»</a>.</p>
+              <p>«Живое слово» и <a href="http://totaldict.ru/">«Тотальный диктант»</a>.</p> 
               <p>Совместный проект на канале «Культура»</p>
             </div>
           </div>
@@ -191,3 +195,6 @@
     </div>
   </body>
 </html>
+
+
+

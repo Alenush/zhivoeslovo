@@ -7,8 +7,20 @@ if (window.jQuery) {
 }
 
 $( document ).ready(function() {
+    inform();
     sendFormToServer();
 });
+
+function inform(){
+    console.log("id следующего диктанта: " + next_id );
+    console.log("дата следующего диктанта: " + next_date);
+    console.log("месяц следующего диктанта: " + next_month);
+    console.log("время следующего диктанта: " + next_time);
+    
+    var monthWord = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"]
+    monthWord[next_month];
+    console.log("тест месяца" + monthWord[next_month]);
+}
 
 function sendFormToServer(){ //основная форма
     var $mark = $("#mark"),
@@ -42,30 +54,45 @@ function sendFormToServer(){ //основная форма
             
             if (data.grade == 5) { //проверка приходящей оценки за диктант
                 /*$classKey.text(data.confirmation);*/
-                $idKey.val(data.confirmation);
                 
                 $(".preload").addClass("hide");
                 $('.dictation').addClass("hide");
                 $(".exellent").removeClass("hide");
                 $(".mersy").removeClass("hide");
+                
+                $idKey.val(data.confirmation);
+                $nextTime.text(next_time);
             } else if(data.grade < 3){
                 $(".preload").addClass("hide");
                 $('.dictation').addClass("hide");
                 $(".sm").removeClass("hide");
                 $(".mersy").removeClass("hide");
+                
+                $nextTime.text(next_time);
             } else {
                 // console.log(data.markup);
                 
                 //Расфасовка информации с сервера =====start======
                 // перебираю весь объект murkup который содержит все слова от присланного диктанта и ошибки внутри
-                for(var i in data.markup){
-                    if(data.markup[i].length > 0){ //если в слове есть ошибка(и)
+                    // for(var i in data.markup){
+                    //     if(data.markup[i].length > 0){ //если в слове есть ошибка(и)
+                    //         allErrors.push( data.markup[i] );
+                    //         var spanError = ' <span id = "error' + numberOfErrors +'" class = "errorInWord">'+ i +'</span> ';
+                    //         allText += spanError;
+                    //         numberOfErrors++;
+                    //     } else { //если в слове нет ошибок
+                    //         allText += i;
+                    //     }
+                    // }
+                
+                for(var i = 0; i < data.markup.length; i ++){
+                    if(data.markup[i].errors.length > 0){
                         allErrors.push( data.markup[i] );
-                        var spanError = ' <span id = "error' + numberOfErrors +'" class = "errorInWord">'+ i +'</span> ';
+                        var spanError = ' <span id = "error' + numberOfErrors +'" class = "orthoErrorsInOriginText">'+ data.markup[i].text +'</span> ';
                         allText += spanError;
                         numberOfErrors++;
-                    } else { //если в слове нет ошибок
-                        allText += i;
+                    } else {
+                        allText += data.markup[i].text;
                     }
                 }
                 //Расфасовка информации с сервера =====the end======
@@ -76,16 +103,21 @@ function sendFormToServer(){ //основная форма
                 //Правильный ответ и правило написания
                 for(i = 0; i < allErrors.length; i++) {
                     var htmlData = '<div id ="setOfRules' + i + '" class = "setOfRules">';
-                    for( var b in allErrors[i]){
-                        htmlData += '<p class = "right_spelling green">' + allErrors[i][b].right_answer + '</p>';
-                        htmlData += '<p class = "rulez addtext">' + allErrors[i][b].comment + '</p>';
-                        //allErrors[i][b].comment
-                        //allErrors[i][b].right_answer
-                        //allErrors[i][b].type
+                    // for( var b in allErrors[i]){
+                    //     htmlData += '<p class = "right_spelling green">' + allErrors[i].errors[0].right_answer + '</p>';
+                    //     htmlData += '<p class = "rulez addtext">' + allErrors[i].errors[0].comment + '</p>';
+                    // }
+                    for(var c = 0; c < allErrors[i].errors.length ;c++){
+                        htmlData += '<p class = "right_spelling green">' + allErrors[i].errors[c].right_answer + '</p>';
+                        htmlData += '<p class = "rulez addtext">' + allErrors[i].errors[c].comment + '</p>';
+                        //allErrors[i].errors[c].comment
+                        //allErrors[i].errors[c].right_answer
+                        //allErrors[i].errors[c].type
                     }
                     htmlData+= "</div>";
                     $blockRules.append(htmlData);
                 }
+                
                 //создание id="blockRules" ====the end====
                 
                 //console.log(allText);
@@ -95,12 +127,13 @@ function sendFormToServer(){ //основная форма
                 $originalText.text(""); //очистить содержание внутри тэга в #originalText
                 $originalText.append(allText); //добавить восозданный оригинальный текст в html
                 $(".setOfRules").css("display", "none");
+                $(".mersy").removeClass("hide");
                 
                 
                 //click On Error ====start====
                 //у каждой ошибки есть свой пакет с информацией о ней, пакеты лежат в дивах типа <div id ="setOfRules0">
                 //при нажатии на нужную ошибку соответствующий блок получает параметры display: block;
-                $(".errorInWord").click(function(event){
+                $(".orthoErrorsInOriginText").click(function(event){
                     $(".setOfRules").css("display", "none");
                     var regExp = /\d+/;
                     var errorNumber = event.currentTarget.id.match(regExp)[0]; // из id  типа "error24" удалаем слово, и оставляем цифры в конце
@@ -113,7 +146,7 @@ function sendFormToServer(){ //основная форма
                 $("#setOfRules0").css("display", "block");
             }
             
-            $nextTime.text(data.next_time); //указываю время в часах следующего диктанта в html
+            $nextTime.text(next_time); //указываю время в часах следующего диктанта в html
         })
         .error(function(data) {
             console.log("Ошибка выполнения ajax"); 
@@ -123,5 +156,13 @@ function sendFormToServer(){ //основная форма
     
     $('#exellentDictionForm').submit(function(event){
         event.preventDefault();
+        $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
+            console.log(data);
+            alert(data);
+            $(".preload").addClass("hide");
+        })
+        .error(function(data) {
+            console.log("Ошибка выполнения ajax"); 
+        });
     });
 }
