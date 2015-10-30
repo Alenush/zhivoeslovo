@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+    <meta charset="UTF-8">
+    <title>Живое слово</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/bootstrap/css/bootstrap.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/css/style.css' /%}">
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/adopt_style.css' /%}">
+   
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/js/antonJS.js' %}"></script>
+    <script type="text/javascript" src="{% static 'zh_slovo/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
+   
+  
+    <div class="wrapper">
+        <header>
+          <div class="container">
+            <a href="http://totaldict.ru/"><div class="logo"></div></a>
+          </div>  
+        </header>
+
+        <div class="container next_dictation">
+          <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+              <h2>
+                Ваша анкета получена. Спасибо)
+              </h2>
+              <img src="{% static 'zh_slovo/images/send.png' %}"></img>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+</html>
+
+
+
