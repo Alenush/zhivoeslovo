@@ -19,7 +19,6 @@ function inform(){
     
     var monthWord = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
     next_month = monthWord[next_month -1];
-    
 }
 
 function calendar(){
@@ -55,6 +54,7 @@ function calendar(){
 }
 
 function sendFormToServer(){ //основная форма ajax отправки данных
+    
     var $mark = $("#mark"),
         $orthoErrors = $("#orthoErrors"),
         $punctErrors = $("#punctErrors"),
@@ -119,7 +119,15 @@ function sendFormToServer(){ //основная форма ajax отправки
                 for(var i = 0; i < data.markup.length; i ++){
                     if(data.markup[i].errors.length > 0){
                         allErrors.push( data.markup[i] );
-                        var spanError = '<span id = "error' + numberOfErrors +'" class = "orthoErrorsInOriginText">'+ data.markup[i].text +'</span> ';
+                        if( data.markup[i].errors.length < 2){
+                            if ( data.markup[i].errors[0].type == "PU" ) {
+                                var spanError = '<span id = "error' + numberOfErrors +'" class = "PU errorsInOriginText">'+ data.markup[i].text +'</span> ';
+                            } else {
+                                var spanError = '<span id = "error' + numberOfErrors +'" class = "OR errorsInOriginText">'+ data.markup[i].text +'</span> ';
+                            }
+                        } else {
+                            var spanError = '<span id = "error' + numberOfErrors +'" class = "OR errorsInOriginText">'+ data.markup[i].text +'</span> ';
+                        }
                         allText += spanError;
                         numberOfErrors++;
                     } else {
@@ -164,7 +172,7 @@ function sendFormToServer(){ //основная форма ajax отправки
                 //click On Error ====start====
                 //у каждой ошибки есть свой пакет с информацией о ней, пакеты лежат в дивах типа <div id ="setOfRules0">
                 //при нажатии на нужную ошибку соответствующий блок получает параметры display: block;
-                $(".orthoErrorsInOriginText").click(function(event){
+                $(".errorsInOriginText").click(function(event){
                     $(".setOfRules").css("display", "none");
                     var regExp = /\d+/;
                     var errorNumber = event.currentTarget.id.match(regExp)[0]; // из id  типа "error24" удалаем слово, и оставляем цифры в конце

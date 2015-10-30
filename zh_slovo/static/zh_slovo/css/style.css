@@ -165,11 +165,12 @@ p{
 
 .OR{
   color:#de3b1b;
-  cursor:pointer;
+ /* border-bottom:1px dotted #de3b1b;*/
+  cursor: pointer;
 }
-
-.orthoErrorsInOriginText{
-  border-bottom:1px dotted #de3b1b;
+.PU{
+  background-color:#de3b1b;
+  padding:0 5px;
   cursor: pointer;
 }
 
