@@ -119,7 +119,7 @@ function sendFormToServer(){ //основная форма ajax отправки
                 for(var i = 0; i < data.markup.length; i ++){
                     if(data.markup[i].errors.length > 0){
                         allErrors.push( data.markup[i] );
-                        var spanError = ' <span id = "error' + numberOfErrors +'" class = "orthoErrorsInOriginText">'+ data.markup[i].text +'</span> ';
+                        var spanError = '<span id = "error' + numberOfErrors +'" class = "orthoErrorsInOriginText">'+ data.markup[i].text +'</span> ';
                         allText += spanError;
                         numberOfErrors++;
                     } else {
@@ -197,3 +197,4 @@ function sendFormToServer(){ //основная форма ajax отправки
     //     });
     // });
 }
+
