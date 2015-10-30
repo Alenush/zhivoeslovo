@@ -14,7 +14,7 @@ import math, datetime, time
 def check_errors_in_db(result, dict_id): #add id_dict and text_user
     """
     Find, where !=equal
-    Function takes from diff resuls (array with ("equal, a1,a2, b1,b2") )
+    Function takes from diff results (array with ("equal, a1,a2, b1,b2") )
     :param result:
     :return: array from (error-object, tok_begin for error tok_end)
     NOTE: ? если у пользователя , или др. пунктуация, то
@@ -53,7 +53,6 @@ def orig_to_user(result):
         print operation, a1, a2, b1, b2, "stretch", stretch, "user", user_range
         for i, j in zip(range(a1, a2), user_range):
             orig2user[i] = j
-    print orig2user
     return orig2user
 
 
@@ -64,8 +63,8 @@ def token_borders2user(origin2user, errors):
     user_er_tokens = []
     for error in errors:
         user_er_tokens.append((origin2user[error[1]], origin2user[error[2]]))
-    print user_er_tokens
     return user_er_tokens
+
 
 def fill_user_arrays(user_borders, errors, dict_text):
     """
@@ -76,16 +75,27 @@ def fill_user_arrays(user_borders, errors, dict_text):
     BUG! two errors in one or empty "" text
     :return:
     """
-    array = [[] for n in xrange(len(dict_text))]
-    print "first array", array
+    array = [[] for n in xrange(len(dict_text)+1)]
     for i in range(0, len(array)):
-        #all_errors = []
-        for part in user_borders:
-            er = errors[user_borders.index(part)][0]
-            if i in range(part[0],part[1]+1):
-                #all_errors.append(er)
-                array[i] = er
-        #print "all_errors", all_errors
+        all_errors = []
+        if len(user_borders) != 0: check_range =[user_borders[0]]
+        print "ERRORS", errors, user_borders
+        for part, error_tuple in zip(user_borders, errors):
+            one_error = error_tuple[0]
+            print "RANGES", part, (error_tuple[1], error_tuple[2])
+            if part in check_range:
+                    all_errors.append(one_error)
+                    check_range.append(part)
+            if i in range(part[0],part[1]+1):#part[1]+1
+                    if part in check_range:
+                        array[i] = all_errors
+                    else:
+                        all_errors = [one_error]
+                        array[i] = all_errors
+                        check_range = []
+                        check_range.append(part)
+            else:
+                all_errors = []
     print "ARRAY", array
     return array
 
@@ -94,9 +104,9 @@ def error2json(error):
     """Convert error object to dictionary suitable for JSON.
     """
     return {
-        "type": error.type_of_error,
-        "comment": error.comments_to_error,
-        "right_answer": error.right_answer,
+        "type": error[0].type_of_error,
+        "comment": error[0].comments_to_error,
+        "right_answer": error[0].right_answer,
     }
 
 
@@ -117,7 +127,7 @@ def collect_markup(parts_array, user_text):
             answer = map(error2json, last_error)
             print "ANSWER", answer
             print "TEXT", text_part, user
-            if text_part == ' ': text_part=","
+            #if text_part == ' ': text_part=","
             dictionary["text"] = text_part
             dictionary["errors"] = answer
             markup.append(dictionary)
@@ -130,6 +140,7 @@ def collect_markup(parts_array, user_text):
     markup.append(dictionary)
     print "MARK UP: ", markup
     return markup
+
 
 def count_errors(markup):
     #- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
@@ -278,7 +289,6 @@ def begin_dict(request):
                                                   "dict_name":dict_name, "dict_id":next_id,
                                                   "list_of_dict":list_of_all_dict})
 
-
 def count_results(request):
     if request.method == 'GET':
         user_text = request.GET.get("dict_text")
@@ -326,4 +336,4 @@ def anons(request):
     
 def success(request):
     return render(request,'success.html')    
-    
+
