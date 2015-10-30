@@ -2,13 +2,10 @@
 //===отправка и получение формы js, потом будет склеин с основным файлом по js===//
 //===============================================================================//
 
-if (window.jQuery) {
-  console.log("Jquery подключен!");
-}
-
 $( document ).ready(function() {
     inform();
     sendFormToServer();
+    calendar();
 });
 
 function inform(){
@@ -16,13 +13,48 @@ function inform(){
     console.log("дата следующего диктанта: " + next_date);
     console.log("месяц следующего диктанта: " + next_month);
     console.log("время следующего диктанта: " + next_time);
+    console.log("список всех диктантов: " + all_dict);
     
-    var monthWord = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"]
-    monthWord[next_month];
-    console.log("тест месяца" + monthWord[next_month]);
+    //console.log( newAll_dict2 );
+    
+    var monthWord = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+    next_month = monthWord[next_month -1];
+    
 }
 
-function sendFormToServer(){ //основная форма
+function calendar(){
+
+    var monthWord = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+    var newStorageOfDatesOfDictations = [];
+    var newAlldict = $.parseJSON( all_dict );
+    var $allElementsOfCalendar = $(".calendar").find("div");
+    
+    console.log( $allElementsOfCalendar );
+    console.dir( newAlldict );
+    
+    for(var i = 0; i < newAlldict.length ;i++){ //преобразую данные с сервера в нормальный вид
+        var temprory = {};
+        temprory.dateNumber = newAlldict[i][0];
+        temprory.dateMonth = monthWord[ newAlldict[i][1]-1 ];
+        temprory.year = newAlldict[i][2];
+        temprory.time = newAlldict[i][3] + ":" +newAlldict[i][4];
+        temprory.dictationId = newAlldict[i][5];
+        
+        newStorageOfDatesOfDictations.push( temprory );
+    }
+    for(var i = 0; i < newStorageOfDatesOfDictations.length; i++){ //пройтись по датам в календаре и добавить им уникальный idномер диктанта
+        $allElementsOfCalendar[i].id = "DictationCalendarId" + newStorageOfDatesOfDictations[i].dictationId;
+    }
+    $(".calendar").find("#DictationCalendarId" + next_id).addClass("red"); //добавить красный цвет в календаре след. диктанту
+    
+    // for(var i = 0; i < $allElementsOfCalendar.length; i++){
+    //     // $allElementsOfCalendar[i].children[0].innerText = "";
+    //     // $allElementsOfCalendar[i].children[1].innerText = "";
+    //     // $allElementsOfCalendar[i].children[2].innerText = "";
+    // }
+}
+
+function sendFormToServer(){ //основная форма ajax отправки данных
     var $mark = $("#mark"),
         $orthoErrors = $("#orthoErrors"),
         $punctErrors = $("#punctErrors"),
@@ -41,10 +73,9 @@ function sendFormToServer(){ //основная форма
         $('#dictionForm').submit();
         $('.dictation').hide();
         $('.preload').removeClass('hide');
-        console.log( $("#dictionForm").serialize() );
     });
     
-    $('#dictionForm').submit(function(event){ //обрабатываем событие submit 
+    $('#dictionForm').submit(function(event){ //обрабатываем событие submit
         event.preventDefault();
         
         $.getJSON("/zhivoeslovo/ajax/results/", $("#dictionForm").serialize(), function(data){
@@ -61,14 +92,14 @@ function sendFormToServer(){ //основная форма
                 $(".mersy").removeClass("hide");
                 
                 $idKey.val(data.confirmation);
-                $nextTime.text(next_time);
+
             } else if(data.grade < 3){
+                
                 $(".preload").addClass("hide");
                 $('.dictation').addClass("hide");
                 $(".sm").removeClass("hide");
                 $(".mersy").removeClass("hide");
                 
-                $nextTime.text(next_time);
             } else {
                 // console.log(data.markup);
                 
@@ -146,7 +177,8 @@ function sendFormToServer(){ //основная форма
                 $("#setOfRules0").css("display", "block");
             }
             
-            $nextTime.text(next_time); //указываю время в часах следующего диктанта в html
+            $nextTime.text(next_time); //указываю время в часах следующего диктанта в html на всех страницах
+            $nextDataTime.text(next_date + " " +next_month);
         })
         .error(function(data) {
             console.log("Ошибка выполнения ajax"); 
@@ -154,15 +186,14 @@ function sendFormToServer(){ //основная форма
         });
     });
     
-    $('#exellentDictionForm').submit(function(event){
-        event.preventDefault();
-        $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
-            console.log(data);
-            alert(data);
-            $(".preload").addClass("hide");
-        })
-        .error(function(data) {
-            console.log("Ошибка выполнения ajax"); 
-        });
-    });
+    // $('#exellentDictionForm').submit(function(event){
+    //     event.preventDefault();
+    //     $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
+    //         console.log(data);
+    //         $(".preload").addClass("hide");
+    //     })
+    //     .error(function(data) {
+    //         console.log("Ошибка выполнения ajax"); 
+    //     });
+    // });
 }

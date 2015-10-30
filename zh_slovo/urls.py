@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^ajax/results/$', views.count_results, name='result_dict'),
     url(r'^ajax/send_results/$', views.send_good_result, name="send_result"),
     url(r'test/', views.test, name='test_json'),
-    url(r'anons/', views.anons, name='anons')
+    url(r'anons/', views.anons, name='anons'),
+    url(r'success/', views.success, name='success')
 ]

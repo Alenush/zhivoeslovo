@@ -36,7 +36,7 @@ class Answer_user(models.Model):
     )
     dict_id = models.IntegerField(null=True) #link to dict_id
     user_text = models.CharField(max_length=500)
-    username = models.CharField(max_length=100)
+    username = models.CharField(max_length=100,null=True)
     id_hash = models.CharField(max_length=200)
     email = models.EmailField(null=True)
     age = models.IntegerField(null=True)

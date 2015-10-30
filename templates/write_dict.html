@@ -51,40 +51,40 @@
           <div class="row">
             
             <form role="form" class="col-sm-6" id = "exellentDictionForm" action="/zhivoeslovo/ajax/send_results/" method="GET">
+              <input type="hidden" name = "dict_id" value = "{{ dict_id }}">
               <div class="form-group"><p>Если Вы хотите участвовать в съемках программы в студии, заполните, пожалуйста, анкету.</p></div>
               
               <div class="form-group">
                 <label for="name">Имя</label>
-                <input type="text" class="form-control" id="name" name="username">
+                <input type="text" class="form-control" id="name" required  name="username">
               </div>
               <div class="form-group">
                 <label for="age">Возраст</label>
-                <input type="number" min="0" max="100" class="form-control" id="age" name="age">
+                <input type="number" min="0" max="100" class="form-control" required  id="age" name="age">
               </div>
               <div class="form-group">
                 <div><label>Пол</label></div>
-                <label class="radio-inline"><input type="radio" value="male" name="sex">мужской</label>
-                <label class="radio-inline"><input type="radio" value="female" name="sex">женский</label>
+                <label class="radio-inline"><input type="radio" value="male" required  name="sex">мужской</label>
+                <label class="radio-inline"><input type="radio" value="female" required name="sex">женский</label>
               </div>
               <div class="form-group">
                 <label for="city">Город</label>
-                <input type="text" class="form-control" id="city" name="city">
-              </div>
+                <input type="text" class="form-control" id="city" required name="city"
               <div class="form-group">
                 <label for="edu">Образование</label>
-                <input type="text" class="form-control" id="edu" name="edu">
+                <input type="text" class="form-control" id="edu" required name="edu">
               </div>
-              <div class="form-group">
+               <div class="form-group">
                 <label for="prof">Профессия</label>
-                <input type="text" class="form-control" id="prof" name="prof">
+                <input type="text" class="form-control" id="prof" required name="prof">
               </div>
               <div class="form-group">
                 <label for="email">Адрес электронной службы</label>
-                <input type="email" class="form-control" id="email" name="email">
+                <input type="email" class="form-control" id="email" required name="email">
               </div>
               <div class="form-group">
                 <label for="key">Код</label>
-                <input type="text" class="form-control" id="key" name="confirmation" readonly>
+                <input type="text" class="form-control" id="key" required name="confirmation" readonly>
               </div>
               <button type="submit" class="white btn btn-danger button" id="pers_data_submit">Отправить</button>
             </form>
@@ -129,8 +129,8 @@
              <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
               <form  id = "dictionForm" action="/zhivoeslovo/ajax/results/" method="GET">
                 {% csrf_token %}
-                <input type="hidden" name = "{{ dict_id }}">
-                <textarea name ="dict_text" class="col-xs-12" spellcheck="false" id="custom_text" placeholder="пишите диктант здесь"></textarea>
+                <input type="hidden" name = "dict_id" value = "{{ dict_id }}">
+                <textarea name ="dict_text" class="col-xs-12" spellcheck="false" id="custom_text" required placeholder="пишите диктант здесь"></textarea>
                 <button type="submit" class="white btn btn-danger button bold" id="submit" data-effect="mfp-zoom-in">
                   <div  class="inline">
                     <p>Проверить</p>
@@ -147,24 +147,23 @@
           <div class="container">
               <div class="row">
                   <div class="col-md-8 col-md-offset-2 calendar">
-                  <script> var next_date = "{{ next_date}}";var next_id = "{{next_id}}";var next_month = "{{ next_month }}";var next_time="{{next_time}}" ;</script>
+                  <script> var all_dict = "{{ list_of_dict }}"; var next_date = "{{ next_date}}";var next_id = "{{next_id}}";var next_month = "{{ next_month }}";var next_time = "{{next_time}}" ;</script>
                   <h2 class=" timetable">Расписание диктантов</h2>
-                  <div class="col-md-2 col-xs-4 center red"><p class="date">2</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">2</p><p>ноября</p><p>20:45</p></div>
                   <div class="col-md-2 col-xs-4 center"><p class="date">3</p><p>ноября</p><p>20:45</p></div>
                   <div class="col-md-2 col-xs-4 center"><p class="date">5</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
-                  <div class="col-md-2 col-xs-4 center"><p class="date">29</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">9</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">10</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">11</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">12</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">16</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">17</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">18</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">19</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">23</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">24</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">25</p><p>ноября</p><p>20:45</p></div>
+                  <div class="col-md-2 col-xs-4 center"><p class="date">26</p><p>ноября</p><p>20:45</p></div>
                 </div> 
             </div>
           </div>

@@ -13,10 +13,7 @@ $(document).ready(function(){
     mainClass: 'mfp-fade',
     idClick: true
   });
-  $('#pers_data_submit').on("click", function(){
-    $('.exellent').hide();
-    $(".preload").removeClass("hide");
-  });
+ 
   
   /*$('#custom_text')[0].addEventListener('paste',function(event){
     event.preventDefault()

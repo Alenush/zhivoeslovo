@@ -11,7 +11,7 @@ import difflib, re, random, simplejson
 import math, datetime, time
 
 
-def check_errors_in_db(result): #add id_dict and text_user
+def check_errors_in_db(result, dict_id): #add id_dict and text_user
     """
     Find, where !=equal
     Function takes from diff resuls (array with ("equal, a1,a2, b1,b2") )
@@ -21,15 +21,15 @@ def check_errors_in_db(result): #add id_dict and text_user
     b1-b2 кусок беру - это \запятая\, проверяю, что это пунктуация и не равно тире. ?
     Добавляем ошибку и пишем - ЗДЕСЬ ОШИБКА ПУНКТАЦИОННАЯ
     """
-    dictation = Dict_text.objects.get(pk=1)
-    origin, dic_id = dictation.dic_origin_text, dictation.id
+    dictation = Dict_text.objects.get(id=dict_id)
+    origin = dictation.dic_origin_text
     errors = []
     for op, a1, a2, b1, b2 in result:
         if op != "equal":
             if a2 == a1: # при вставке мы хотим иметь непустой диапазон букв со стороны orig
                 a2 += 1
             for pos in range(a1, a2):
-                er_object = Errors_table.objects.filter(id_dict=dic_id,symbol_place_in_sent=pos)
+                er_object = Errors_table.objects.filter(id_dict=dict_id, symbol_place_in_sent=pos)
                 if len(er_object) != 0:
                     object_dic = er_object.values()[0]
                     tok_begin, tok_end = object_dic["token_border_begin"], object_dic["token_border_end"]
@@ -66,7 +66,6 @@ def token_borders2user(origin2user, errors):
         user_er_tokens.append((origin2user[error[1]], origin2user[error[2]]))
     print user_er_tokens
     return user_er_tokens
-
 
 def fill_user_arrays(user_borders, errors, dict_text):
     """
@@ -132,7 +131,6 @@ def collect_markup(parts_array, user_text):
     print "MARK UP: ", markup
     return markup
 
-
 def count_errors(markup):
     #- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
     # сколько хотя бы одну пунктуационную; эти числа и называем числом ошибок
@@ -147,7 +145,7 @@ def count_errors(markup):
     return OR, PU
 
 
-def diff_strings(user, origin):
+def diff_strings(user, origin, dict_id):
     """
     Function aligns two strings. and make everything
     :param sent1: sentence user
@@ -158,7 +156,7 @@ def diff_strings(user, origin):
     print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
     result = dif.get_opcodes()
     origin2user = orig_to_user(result) # dictionary of orig to user match
-    errors = check_errors_in_db(result) # array with (er_object, tok_begin, tok_end))
+    errors = check_errors_in_db(result, dict_id) # array with (er_object, tok_begin, tok_end))
     print "errors", errors
     user_borders = token_borders2user(origin2user, errors) # user tokens with errors
     print "borders", user_borders
@@ -213,7 +211,6 @@ def compare_date(now_day, now_month, day, month):
             elif day_left == 0: return 0
             else: return day_left
 
-
 def find_days_left(day, month, year):
     factor = 365*year + day+ 31*(month-1)+((year-1)/4)-(3/4*((year-1)/100+1))
     return factor
@@ -243,12 +240,13 @@ def select_date_time(object_dictionary):
     next_date_ar = dict_with_obj_dayleft[min_daysleft]
     return next_date_ar.data, next_date_ar.id
 
+
 def normalize_user_text(user_text):
     if user_text[0] == " ": user_text = user_text[1:]
     print user_text
     if user_text[-1] == " ": user_text = user_text[:-1]
     print user_text
-    user_text = user_text.replace("  "," ").replace("!",".").replace("...",".").replace("?",".").replace(" - ", " ")
+    user_text = user_text.replace("\n", "").replace("\r","").replace("  "," ").replace("!",".").replace("...",".").replace("?",".").replace(" - ", " ")
     print user_text
     return user_text
 
@@ -264,29 +262,30 @@ def begin_dict(request):
             string_of_date = str(date_info.data)
             date = string_of_date.split(" ")[0]
             time = string_of_date.split(" ")[1]
-            list_of_all_dict.append((date.split("-")[2],date.split("-")[1],date.split("-")[0], time[0:5], date_info.id))
             date_dictionary[date_info] = [date, time]
+            t1, t2 = time[0:2], time[3:5]
+            list_of_all_dict.append([int(date.split("-")[2]), int(date.split("-")[1]), int(date.split("-")[0]), int(t1), int(t2), date_info.id])
         next_date_time, next_id = select_date_time(date_dictionary)
         next_date = str(next_date_time).split(" ")[0]
         next_time = str(next_date_time).split(" ")[1]
         next_day, next_month = next_date.split("-")[2], next_date.split("-")[1]
-        dictation = Dict_text.objects.get(pk=1)
+        dictation = Dict_text.objects.get(id=next_id)
         link = dictation.video_link
         dict_name = dictation.dict_name
-        dict_id = 1
-        print "ALL_LIST_DICT", list_of_all_dict
+        print dictation, "Data_time", dict_name, "DICT_NAME"
         return render(request,'write_dict.html', {"video":link, "next_date":next_day, "next_month":next_month,
                                                   "next_time":next_time[0:5], "next_id":next_id,
-                                                  "dict_name":dict_name, "dict_id":dict_id,
+                                                  "dict_name":dict_name, "dict_id":next_id,
                                                   "list_of_dict":list_of_all_dict})
 
 
 def count_results(request):
     if request.method == 'GET':
         user_text = request.GET.get("dict_text")
+        dict_id = request.GET.get("dict_id")
         user_text = normalize_user_text(user_text)
-        original_text = Dict_text.objects.get(pk=1)
-        result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text)
+        original_text = Dict_text.objects.get(id=dict_id)
+        result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text, dict_id)
         user_hash = add_hash_number()
 
         user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text, grade = int(grade))
@@ -305,19 +304,14 @@ def send_good_result(request):
         user_sex = request.GET.get("sex")
         user_city = request.GET.get("city")
         user_email = request.GET.get("email")
-        user_hash = request.GET.get("confirmation")
-        user_edu = request.GET.get("edu")
         user_prof = request.GET.get("prof")
-        print user_name, user_prof
-        print user_age, user_city
-        print user_hash, user_edu
-        print user_sex
+        user_edu = request.GET.get("edu")
+        user_hash = request.GET.get("confirmation")
+        dict_id = request.GET.get("dict_id")
         user = Answer_user.objects.get(id_hash=user_hash)
-        print "USER EXIST", user
-        user.username, user.age, user.sex, user.city, user.email = user_name, user_age, user_sex, user_city, user_email
+        user.username, user.age, user.sex, user.city, user.email, user.edu, user.prof, user.dict_id = user_name, user_age, user_sex, user_city, user_email, user_edu, user_prof, dict_id
         user.save()
-        json = {}
-        return HttpResponse(json, content_type='application/json')
+        return redirect('/zhivoeslovo/success/')
         
 
 def custom_404(request):
@@ -329,3 +323,7 @@ def test(request):
     
 def anons(request):
     return render(request,'anons.html')
+    
+def success(request):
+    return render(request,'success.html')    
+    
