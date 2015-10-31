@@ -82,6 +82,9 @@ DATABASES = {
     }
 }
 
+ALL_RESULTS = os.path.join(BASE_DIR, 'all.tsv')
+GOOD_RESULTS = os.path.join(BASE_DIR, 'good.tsv')
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/

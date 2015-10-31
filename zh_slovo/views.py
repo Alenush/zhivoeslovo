@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #__author__ = 'alenush'
+from codecs import open
 from django.shortcuts import render, render_to_response
 from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
+from django.conf import settings
 from .models import Dict_text, Errors_table, Answer_user
 import difflib, re, random, simplejson
 import math, datetime, time
@@ -268,6 +270,14 @@ def normalize_user_text(user_text):
     print user_text
     return user_text
 
+
+def append_to_storage(filename, values, keys=None):
+    with open(filename, 'a', encoding='utf-8') as fd:
+        if keys:
+            values = [values.get(key) for key in keys]
+        parts = (value.replace('\t', ' ').replace('\n', '\\n') for value in values)
+        fd.write('\t'.join(parts) + '\n')
+
 # ========SEND TO TEMPlATE ===============================
 
 
@@ -306,8 +316,7 @@ def count_results(request):
         result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text, dict_id)
         user_hash = add_hash_number()
 
-        user_info = Answer_user.objects.create(id_hash = user_hash, user_text = user_text, grade = int(grade))
-        user_info.save()
+        append_to_storage(settings.ALL_RESULTS, (user_hash, user_text, str(int(grade))))
 
         results = {"grade": grade, "confirmation": user_hash,
                    "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
@@ -317,18 +326,11 @@ def count_results(request):
 
 def send_good_result(request):
     if request.method == 'GET':
-        user_name = request.GET.get("username")
-        user_age = request.GET.get("age")
-        user_sex = request.GET.get("sex")
-        user_city = request.GET.get("city")
-        user_email = request.GET.get("email")
-        user_prof = request.GET.get("prof")
-        user_edu = request.GET.get("edu")
-        user_hash = request.GET.get("confirmation")
-        dict_id = request.GET.get("dict_id")
-        user = Answer_user.objects.get(id_hash=user_hash)
-        user.username, user.age, user.sex, user.city, user.email, user.edu, user.prof, user.dict_id = user_name, user_age, user_sex, user_city, user_email, user_edu, user_prof, dict_id
-        user.save()
+        append_to_storage(
+            settings.GOOD_RESULTS,
+            request.GET,
+            ("username", "age", "sex", "city", "email",
+             "prof", "edu", "confirmation", "dict_id"))
         return redirect('/zhivoeslovo/success/')
         
 
