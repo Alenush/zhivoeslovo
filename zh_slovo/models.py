@@ -40,7 +40,7 @@ class Answer_user(models.Model):
     id_hash = models.CharField(max_length=200)
     email = models.EmailField(null=True)
     age = models.IntegerField(null=True)
-    sex = models.CharField(max_length=7, choices=SEX, default=MASC)
+    sex = models.CharField(max_length=7, choices=SEX)
     city = models.CharField(max_length=50)
     grade = models.IntegerField(null=True)
     prof = models.CharField(max_length=500,null=True)
