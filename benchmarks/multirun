@@ -1,7 +1,7 @@
 #!/bin/bash
 parallel="${parallel:-10}"
-count="${count:-200}"
-url="${url:-http://totaldict.ru:8086}"
+count="${count:-100}"
+url="${url:-http://totaldict.ru:8086/zhivoeslovo}"
 
 run () {
 	for n in `seq 1 "$parallel"`; do

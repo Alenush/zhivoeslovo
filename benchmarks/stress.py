@@ -23,9 +23,9 @@ def fetch(url):
 	return reply
 
 def attempt():
-	fetch(options.url + "/zhivoeslovo/")
-	query = urllib.urlencode(dict(dict_text=mutate(text).encode('utf-8')))
-	fetch(options.url + "/zhivoeslovo/ajax/results/?" + query)
+	fetch(options.url + "/begin/")
+	query = urllib.urlencode(dict(dict_text=mutate(text).encode('utf-8'),dict_id=1))
+	fetch(options.url + "/ajax/results/?" + query)
 
 def main():
 	for n in range(options.count):
