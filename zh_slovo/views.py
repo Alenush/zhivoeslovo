@@ -4,7 +4,7 @@
 import difflib
 import re
 import random
-import simplejson
+import json
 import math
 import datetime
 from codecs import open
