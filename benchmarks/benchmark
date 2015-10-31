@@ -1,0 +1,46 @@
+#!/bin/bash
+urls_file="${urls_file:-dict1.txt}"
+url_prefix="${url_prefix:-http://totaldict.ru/zhivoeslovo}"
+url_suffix="${url_suffix:-}"
+concurrent="${concurrent:-1}"
+
+once () {
+	while read url; do
+		wget -q -O - "$url_prefix$url$url_suffix" > /dev/null
+	done < "$urls_file"
+}
+
+time_once () {
+	echo "["
+	date
+	echo "]" 1 `wc -l "$urls_file"`
+	time -p once
+	echo "$url_prefix\`$urls_file\`$url_suffix"
+}
+
+log_once () {
+	echo `time_once 2>&1` >> benchmark.txt
+}
+
+multi () {
+	for n in `seq 1 $concurrent`; do
+		log_once &
+	done
+	for n in `seq 1 $concurrent`; do
+		wait
+	done
+}
+
+time_multi () {
+	echo "["
+	date
+	echo "]" "$concurrent" `wc -l "$urls_file"`
+	time -p multi
+	echo  "$url_prefix\`$urls_file\`$url_suffix"
+}
+
+log_multi () {
+	echo `time_multi 2>&1` >> benchmark.txt
+}
+
+log_multi
