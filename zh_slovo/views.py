@@ -1,16 +1,22 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #__author__ = 'alenush'
+import difflib
+import re
+import random
+import simplejson
+import math
+import datetime
 from codecs import open
+
 from django.shortcuts import render, render_to_response
 from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext, loader
 from django.conf import settings
+
 from .models import Dict_text, Errors_table, Answer_user
-import difflib, re, random, simplejson
-import math, datetime, time
 
 try:
 	import memcache
