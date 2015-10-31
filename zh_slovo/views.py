@@ -286,7 +286,7 @@ def append_to_storage(filename, values, keys=None):
 
 # ========SEND TO TEMPlATE ===============================
 
-@cache_page(60 * 15)
+@cache_page(15)
 def begin_dict(request):
         all_dict = Dict_text.objects.all()
         list_of_all_dict = []
