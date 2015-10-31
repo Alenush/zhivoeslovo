@@ -203,3 +203,4 @@ function sendFormToServer(){ //основная форма ajax отправки
     //     });
     // });
 }
+
