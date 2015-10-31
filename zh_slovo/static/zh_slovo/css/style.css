@@ -147,6 +147,12 @@ p{
   color: green;
 }
 
+.help{
+  padding-top: 13px;
+}
+.help_icon{
+  width: 100%;
+}
 
 #check_send{
   background: white;
@@ -162,6 +168,9 @@ p{
 #yes, #close{
   margin:0;
 }
+.rulez{
+  margin-bottom:25px;
+}
 
 .OR{
   color:#de3b1b;
@@ -173,4 +182,3 @@ p{
   padding:0 5px;
   cursor: pointer;
 }
-

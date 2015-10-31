@@ -1,8 +1,4 @@
-$(document).ready(function(){ 
-  $('#submit').on('click', function(event) {
-    event.preventDefault();
-      if($("#custom_text").val().length > 0 && $("#custom_text").val()!=" "){
-        $('#submit').magnificPopup({
+var popupDefaults = {
           items: {
               src: '#check_send',
               type: 'inline'},
@@ -14,11 +10,18 @@ $(document).ready(function(){
           },
           mainClass: 'mfp-fade',
           idClick: true
-          });
-      }
-      else{alert("Введите, пожалуйста, текст диктанта")}
-    })
-    
+  }
+          
+$(document).ready(function(){
+  
+  $('#open_pop').on("click", function(event){
+    event.preventDefault()
+    var custom_text_l = $("#custom_text").val()
+    if(custom_text_l.length > 0 && custom_text_l!=" "){
+      $(this).magnificPopup(popupDefaults).magnificPopup('open');
+    }
+    else{alert("Введите, пожалуйста, текст диктанта")}
+});
   
   $('#pers_data_submit').on("click", function(){
     $('.exellent').hide();
@@ -29,5 +32,9 @@ $(document).ready(function(){
     event.preventDefault()
   })*/
 });
-  
+/* var custom_text_l = $("#custom_text").val().length
+ 
+  if(custom_text_l > 0 && custom_text_l!=" "){*/
 
+
+  

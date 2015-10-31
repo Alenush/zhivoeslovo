@@ -82,7 +82,6 @@ def fill_user_arrays(user_borders, errors, dict_text):
         print "ERRORS", errors, user_borders
         for part, error_tuple in zip(user_borders, errors):
             one_error = error_tuple[0]
-            print "RANGES", part, (error_tuple[1], error_tuple[2])
             if part in check_range:
                     all_errors.append(one_error)
                     check_range.append(part)
@@ -118,7 +117,8 @@ def collect_markup(parts_array, user_text):
     text_part = ""
     last_error = []
     dictionary = {}
-    print "Array_wth_parts", parts_array
+    print "Array_wth_parts", parts_array, user_text,  len(parts_array), len(user_text)
+    if len(parts_array) > len(user_text): user_text += " "
     for user, error in zip(user_text, parts_array):
         if error == last_error:
             text_part += user
@@ -127,7 +127,6 @@ def collect_markup(parts_array, user_text):
             answer = map(error2json, last_error)
             print "ANSWER", answer
             print "TEXT", text_part, user
-            #if text_part == ' ': text_part=","
             dictionary["text"] = text_part
             dictionary["errors"] = answer
             markup.append(dictionary)
@@ -214,6 +213,14 @@ def find_date_now():
     year, month, day = date.split("-")[0], date.split("-")[1], date.split("-")[2]
     return time, day, month, year
 
+def count_week_day(day, month, year):
+    days = [1,2,3,4,5,6,7]
+    an = (14 - month) // 12
+    y = year - an
+    m = month + (12*an) - 2
+    result = ((7000 + (day + y + y//4 - y//100 + y//400 + (31*m) // 12)) % 7) - 1
+    return days[result]
+
 
 def compare_date(now_day, now_month, day, month):
     if now_month ==  month:
@@ -221,6 +228,7 @@ def compare_date(now_day, now_month, day, month):
             if day_left < 0: return 0
             elif day_left == 0: return 0
             else: return day_left
+
 
 def find_days_left(day, month, year):
     factor = 365*year + day+ 31*(month-1)+((year-1)/4)-(3/4*((year-1)/100+1))
@@ -230,7 +238,6 @@ def find_days_left(day, month, year):
 def select_date_time(object_dictionary):
     print "DICTIONARY", object_dictionary
     now_time, now_day, now_month, now_year = find_date_now()
-    now_day, now_month = "01", "11"
     days_left_now = find_days_left(int(now_day), int(now_month), int(now_year))
     dict_with_obj_dayleft = {}
     min_daysleft = 0
@@ -257,10 +264,9 @@ def normalize_user_text(user_text):
     print user_text
     if user_text[-1] == " ": user_text = user_text[:-1]
     print user_text
-    user_text = user_text.replace("\n", "").replace("\r","").replace("  "," ").replace("!",".").replace("...",".").replace("?",".").replace(" - ", " ")
+    user_text = user_text.replace("\n", "").replace("\r","").replace("  ,", ",").replace("  "," ").replace("!",".").replace("...",".").replace("?",".").replace(" - ", " ")
     print user_text
     return user_text
-
 
 # ========SEND TO TEMPlATE ===============================
 
@@ -275,7 +281,9 @@ def begin_dict(request):
             time = string_of_date.split(" ")[1]
             date_dictionary[date_info] = [date, time]
             t1, t2 = time[0:2], time[3:5]
-            list_of_all_dict.append([int(date.split("-")[2]), int(date.split("-")[1]), int(date.split("-")[0]), int(t1), int(t2), date_info.id])
+            week_day =  count_week_day(int(date.split("-")[2]), int(date.split("-")[1]), 2015)
+            print "WEEK", week_day
+            list_of_all_dict.append([int(date.split("-")[2]), int(date.split("-")[1]), week_day, int(t1), int(t2), date_info.id])
         next_date_time, next_id = select_date_time(date_dictionary)
         next_date = str(next_date_time).split(" ")[0]
         next_time = str(next_date_time).split(" ")[1]
@@ -283,7 +291,7 @@ def begin_dict(request):
         dictation = Dict_text.objects.get(id=next_id)
         link = dictation.video_link
         dict_name = dictation.dict_name
-        print dictation, "Data_time", dict_name, "DICT_NAME"
+        print "DICTATIONS", list_of_all_dict
         return render(request,'write_dict.html', {"video":link, "next_date":next_day, "next_month":next_month,
                                                   "next_time":next_time[0:5], "next_id":next_id,
                                                   "dict_name":dict_name, "dict_id":next_id,
@@ -336,4 +344,3 @@ def anons(request):
     
 def success(request):
     return render(request,'success.html')    
-

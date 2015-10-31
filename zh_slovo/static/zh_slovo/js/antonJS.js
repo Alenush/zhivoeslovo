@@ -24,33 +24,37 @@ function inform(){
 function calendar(){
 
     var monthWord = ["января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"];
+    var weekDayWord = ["понедельник","вторник","среда","четверг","пятница","суббота","воскресенье"];
     var newStorageOfDatesOfDictations = [];
     var newAlldict = $.parseJSON( all_dict );
-    var $allElementsOfCalendar = $(".calendar").find("div");
+    var numbersOfcalendar = "";
     
-    console.log( $allElementsOfCalendar );
     console.dir( newAlldict );
     
     for(var i = 0; i < newAlldict.length ;i++){ //преобразую данные с сервера в нормальный вид
         var temprory = {};
         temprory.dateNumber = newAlldict[i][0];
         temprory.dateMonth = monthWord[ newAlldict[i][1]-1 ];
-        temprory.year = newAlldict[i][2];
+        temprory.weekDay = weekDayWord[ newAlldict[i][2]-1 ];
+        //temprory.year = newAlldict[i][3];
         temprory.time = newAlldict[i][3] + ":" +newAlldict[i][4];
         temprory.dictationId = newAlldict[i][5];
         
         newStorageOfDatesOfDictations.push( temprory );
     }
+    
+    for(var i = 0; i < newStorageOfDatesOfDictations.length; i++){ //сформеровать календарь из упорядоченных данных с сервера
+        numbersOfcalendar += '<div class ="col-md-3 col-xs-4 center"><p class ="date">' + newStorageOfDatesOfDictations[i].dateNumber + '</p>';
+        numbersOfcalendar += '<p>'+ newStorageOfDatesOfDictations[i].dateMonth +'</p>';
+        numbersOfcalendar += '<p>'+ newStorageOfDatesOfDictations[i].weekDay +'</p>';
+        numbersOfcalendar += '<p>'+ newStorageOfDatesOfDictations[i].time +'</p></div>';
+    }
+    $(".calendar").append( numbersOfcalendar ); //вставить сформерованные даты диктантов в календарь
+    
     for(var i = 0; i < newStorageOfDatesOfDictations.length; i++){ //пройтись по датам в календаре и добавить им уникальный idномер диктанта
-        $allElementsOfCalendar[i].id = "DictationCalendarId" + newStorageOfDatesOfDictations[i].dictationId;
+        $(".calendar").find("div")[i].id = "DictationCalendarId" + newStorageOfDatesOfDictations[i].dictationId;
     }
     $(".calendar").find("#DictationCalendarId" + next_id).addClass("red"); //добавить красный цвет в календаре след. диктанту
-    
-    // for(var i = 0; i < $allElementsOfCalendar.length; i++){
-    //     // $allElementsOfCalendar[i].children[0].innerText = "";
-    //     // $allElementsOfCalendar[i].children[1].innerText = "";
-    //     // $allElementsOfCalendar[i].children[2].innerText = "";
-    // }
 }
 
 function sendFormToServer(){ //основная форма ajax отправки данных
@@ -101,21 +105,8 @@ function sendFormToServer(){ //основная форма ajax отправки
                 $(".mersy").removeClass("hide");
                 
             } else {
-                // console.log(data.markup);
-                
                 //Расфасовка информации с сервера =====start======
-                // перебираю весь объект murkup который содержит все слова от присланного диктанта и ошибки внутри
-                    // for(var i in data.markup){
-                    //     if(data.markup[i].length > 0){ //если в слове есть ошибка(и)
-                    //         allErrors.push( data.markup[i] );
-                    //         var spanError = ' <span id = "error' + numberOfErrors +'" class = "errorInWord">'+ i +'</span> ';
-                    //         allText += spanError;
-                    //         numberOfErrors++;
-                    //     } else { //если в слове нет ошибок
-                    //         allText += i;
-                    //     }
-                    // }
-                
+                //Перебираю весь объект murkup который содержит все слова от присланного диктанта и ошибки внутри
                 for(var i = 0; i < data.markup.length; i ++){
                     if(data.markup[i].errors.length > 0){
                         allErrors.push( data.markup[i] );
@@ -142,16 +133,24 @@ function sendFormToServer(){ //основная форма ajax отправки
                 //Правильный ответ и правило написания
                 for(i = 0; i < allErrors.length; i++) {
                     var htmlData = '<div id ="setOfRules' + i + '" class = "setOfRules">';
-                    // for( var b in allErrors[i]){
-                    //     htmlData += '<p class = "right_spelling green">' + allErrors[i].errors[0].right_answer + '</p>';
-                    //     htmlData += '<p class = "rulez addtext">' + allErrors[i].errors[0].comment + '</p>';
-                    // }
-                    for(var c = 0; c < allErrors[i].errors.length ;c++){
-                        htmlData += '<p class = "right_spelling green">' + allErrors[i].errors[c].right_answer + '</p>';
-                        htmlData += '<p class = "rulez addtext">' + allErrors[i].errors[c].comment + '</p>';
-                        //allErrors[i].errors[c].comment
-                        //allErrors[i].errors[c].right_answer
-                        //allErrors[i].errors[c].type
+                    var rightHas = false
+                    if ( allErrors[i].errors.length > 1 ) {
+                        for(var c = 0; c < allErrors[i].errors.length; c++){
+                            if(rightHas == false){
+                                htmlData += '<p class = "right_spelling green">' + allErrors[i].errors[c].right_answer + '</p>';
+                                rightHas = true;
+                            }
+                            htmlData += '<p class = "rulez addtext">' + allErrors[i].errors[c].comment + '</p>';
+                        }
+                    } else {
+                        for(var c = 0; c < allErrors[i].errors.length ;c++){
+                            htmlData += '<p class = "right_spelling green">' + allErrors[i].errors[c].right_answer + '</p>';
+                            htmlData += '<p class = "rulez addtext">' + allErrors[i].errors[c].comment + '</p>';
+                            //allErrors[i].errors[c].comment
+                            //allErrors[i].errors[c].right_answer
+                            //allErrors[i].errors[c].type
+                        }
+                        
                     }
                     htmlData+= "</div>";
                     $blockRules.append(htmlData);
@@ -186,15 +185,14 @@ function sendFormToServer(){ //основная форма ajax отправки
             }
             
             $nextTime.text(next_time); //указываю время в часах следующего диктанта в html на всех страницах
-            $nextDataTime.text(next_date + " " +next_month);
+            $nextDataTime.text(next_date + " " + next_month);
         })
         .error(function(data) {
-            console.log("Ошибка выполнения ajax"); 
-            console.log(data); 
+            console.log("Ошибка выполнения ajax");
         });
     });
     
-    // $('#exellentDictionForm').submit(function(event){
+    // $('#exellentDictionForm').submit(function(event){ //отосладть данные об отличнике через ajax
     //     event.preventDefault();
     //     $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
     //         console.log(data);
@@ -205,4 +203,3 @@ function sendFormToServer(){ //основная форма ajax отправки
     //     });
     // });
 }
-
