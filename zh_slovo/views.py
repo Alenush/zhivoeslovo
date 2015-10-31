@@ -12,6 +12,12 @@ from .models import Dict_text, Errors_table, Answer_user
 import difflib, re, random, simplejson
 import math, datetime, time
 
+try:
+	import memcache
+	from django.views.decorators.cache import cache_page
+except ImportError:
+	cache_page = lambda t: (lambda f: f)
+
 
 def check_errors_in_db(result, dict_id): #add id_dict and text_user
     """
@@ -280,7 +286,7 @@ def append_to_storage(filename, values, keys=None):
 
 # ========SEND TO TEMPlATE ===============================
 
-
+@cache_page(60 * 15)
 def begin_dict(request):
         all_dict = Dict_text.objects.all()
         list_of_all_dict = []
