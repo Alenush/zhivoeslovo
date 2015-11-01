@@ -18,7 +18,7 @@ def main():
 	connection.close()
 
 def add_all_results(cursor, connection):
-	for id_hash, user_text, grade in table(ALL_RESULTS):
+	for id_hash, user_text, grade, uid in table(ALL_RESULTS):
 		(n,), = cursor.execute(
 			'SELECT count(*) FROM {table}'
 			' WHERE id_hash = ?'.format(table=TABLE), (id_hash,))
@@ -31,7 +31,7 @@ def add_all_results(cursor, connection):
 
 def add_good_results(cursor, connection):
 	for (username, age, sex, city, email, prof,
-			 edu, id_hash, dict_id) in table(GOOD_RESULTS):
+			 edu, id_hash, dict_id, uid) in table(GOOD_RESULTS):
 		cursor.execute(
 			'UPDATE {table} SET username=?, age=?, sex=?, city=?,'
 			' email=?, prof=?, edu=?, dict_id=?'

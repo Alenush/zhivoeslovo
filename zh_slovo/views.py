@@ -7,6 +7,7 @@ import random
 import json
 import math
 import datetime
+from uuid import uuid4
 from codecs import open
 from itertools import izip
 
@@ -188,15 +189,6 @@ def return_user_grade(orph,punct):
         return u"2"
 
 
-def add_hash_number():
-    """
-    Add hash to user answer.
-    :return:
-    """
-    hash = random.getrandbits(128)
-    print "%032x" % hash
-    return "%032x"%hash
-
 
 def find_date_now():
     time_now = str(datetime.datetime.now())
@@ -279,6 +271,7 @@ def append_to_storage(filename, values, keys=None):
 
 @cache_page(15)
 def begin_dict(request, dict_id=None):
+        request.session.setdefault('uid', str(uuid4()))
         all_dict = Dict_text.objects.all()
         list_of_all_dict = []
         date_dictionary = {}
@@ -312,9 +305,9 @@ def count_results(request):
         user_text = normalize_user_text(user_text)
         original_text = Dict_text.objects.get(id=dict_id)
         result, grade, or_er, p_er, markup = diff_strings(user_text, original_text.dic_origin_text, dict_id)
-        user_hash = add_hash_number()
+        user_hash = str(uuid4())
 
-        append_to_storage(settings.ALL_RESULTS, (user_hash, user_text, str(int(grade))))
+        append_to_storage(settings.ALL_RESULTS, (user_hash, user_text, str(int(grade)), request.session.get('uid', '')))
 
         results = {"grade": grade, "confirmation": user_hash,
                    "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
@@ -323,11 +316,13 @@ def count_results(request):
 
 def send_good_result(request):
     if request.method == 'GET':
+        data = dict(request.GET.items())
+        data['uid'] = request.session.get('uid', '')
         append_to_storage(
             settings.GOOD_RESULTS,
-            request.GET,
+            data,
             ("username", "age", "sex", "city", "email",
-             "prof", "edu", "confirmation", "dict_id"))
+             "prof", "edu", "confirmation", "dict_id", "uid"))
         return redirect('/zhivoeslovo/success/')
         
 
@@ -340,8 +335,8 @@ def test(request):
 def anons(request):
     #if request.method == 'GET':
         #dict_id = request.GET.get("dict_id")
-	#dictant = Dict_text.objects.get(id=dict_id)
-	#link_to_otschet = dictant.otschet
+    #dictant = Dict_text.objects.get(id=dict_id)
+    #link_to_otschet = dictant.otschet
     return render(request,'anons.html')#, {"link":link_to_otschet})
 
 def success(request):
