@@ -188,59 +188,25 @@ def return_user_grade(orph,punct):
     else:
         return u"2"
 
+def active_future_dictation(all_dictations):
+    now = datetime.datetime.now()
+    duration = datetime.timedelta(minutes=settings.DICT_DURATION)
+    active = future = None
+    for dictation in all_dictations:
+        date = dictation.data.replace(tzinfo=None)
+        if date < now < date + duration:
+            active = dictation
+        if now < date:
+            if not future or future.data > dictation.data:
+                future = dictation
+    return active, future
 
-
-def find_date_now():
-    time_now = str(datetime.datetime.now())
-    date, time =  time_now.split(" ")[0], time_now.split(" ")[1][0:5]
-    year, month, day = date.split("-")[0], date.split("-")[1], date.split("-")[2]
-    return time, day, month, year
-
-def count_week_day(day, month, year):
-    days = [1,2,3,4,5,6,7]
-    an = (14 - month) // 12
-    y = year - an
-    m = month + (12*an) - 2
-    result = ((7000 + (day + y + y//4 - y//100 + y//400 + (31*m) // 12)) % 7) - 1
-    return days[result]
-
-
-def compare_date(now_day, now_month, day, month):
-    if now_month ==  month:
-            day_left = int(day) - int(now_day)
-            if day_left < 0: return 0
-            elif day_left == 0: return 0
-            else: return day_left
-
-
-def find_days_left(day, month, year):
-    factor = 365*year + day+ 31*(month-1)+((year-1)/4)-(3/4*((year-1)/100+1))
-    return factor
-
-
-def select_date_time(object_dictionary):
-    print "DICTIONARY", object_dictionary
-    now_time, now_day, now_month, now_year = find_date_now()
-    days_left_now = find_days_left(int(now_day), int(now_month), int(now_year))
-    dict_with_obj_dayleft = {}
-    min_daysleft = 0
-    for date_object in object_dictionary:
-        print "OBJECT", date_object
-        date = (object_dictionary[date_object])[0]
-        year, month, day = date.split("-")[0], date.split("-")[1], date.split("-")[2]
-        days_left = find_days_left(int(day), int(month), int(year))
-        print "DAYS DIFFERENCE", days_left - days_left_now
-        difference = days_left-days_left_now
-        if min_daysleft == 0:
-            if difference > 0: min_daysleft = difference
-        else:
-            if difference > 0:
-                if difference < min_daysleft: min_daysleft = difference
-        print "MIN!", min_daysleft
-        dict_with_obj_dayleft[difference] = date_object
-    next_date_ar = dict_with_obj_dayleft[min_daysleft]
-    return next_date_ar.data, next_date_ar.id
-
+def dict_schedule(all_dictations):
+    return [
+        [d.data.day, d.data.month, d.data.isoweekday(),
+        d.data.hour, d.data.minute, d.id]
+        for d in all_dictations
+    ]
 
 dash_re = re.compile(r'[—––—‒–—―‒–—―⁓⸺⸻‐_~¯ˉˍ˗˜‐‑‾⁃⁻₋−∼⎯⏤─➖𐆑]')
 space_re = re.compile(r'\s+(-+\s+)?')
@@ -271,32 +237,24 @@ def append_to_storage(filename, values, keys=None):
 
 @cache_page(15)
 def begin_dict(request, dict_id=None):
-        request.session.setdefault('uid', str(uuid4()))
-        all_dict = Dict_text.objects.all()
-        list_of_all_dict = []
-        date_dictionary = {}
-        for date_info in all_dict:
-            string_of_date = str(date_info.data)
-            date = string_of_date.split(" ")[0]
-            time = string_of_date.split(" ")[1]
-            date_dictionary[date_info] = [date, time]
-            t1, t2 = time[0:2], time[3:5]
-            week_day =  count_week_day(int(date.split("-")[2]), int(date.split("-")[1]), 2015)
-            print "WEEK", week_day
-            list_of_all_dict.append([int(date.split("-")[2]), int(date.split("-")[1]), week_day, int(t1), int(t2), date_info.id])
-        next_date_time, next_id = select_date_time(date_dictionary)
-        if dict_id: next_id = int(dict_id)
-        next_date = str(next_date_time).split(" ")[0]
-        next_time = str(next_date_time).split(" ")[1]
-        next_day, next_month = next_date.split("-")[2], next_date.split("-")[1]
-        dictation = Dict_text.objects.get(id=next_id)
-        link = dictation.video_link
-        dict_name = dictation.dict_name
-        print "DICTATIONS", list_of_all_dict
-        return render(request,'write_dict.html', {"video":link, "next_date":next_day, "next_month":next_month,
-                                                  "next_time":next_time[0:5], "next_id":next_id,
-                                                  "dict_name":dict_name, "dict_id":next_id,
-                                                  "list_of_dict":list_of_all_dict})
+    request.session.setdefault('uid', str(uuid4()))
+    all_dictations = Dict_text.objects.all()
+    active, future = active_future_dictation(all_dictations)
+    if dict_id:
+        active = Dict_text.objects.get(id=int(dict_id))
+    return write_dict(request, active, future, all_dictations)
+
+def write_dict(request, active, future, all_dictations):
+    return render(request, 'write_dict.html', dict(
+        next_date=future.data.day,
+        next_month=future.data.month,
+        next_time='{:%H:%M}'.format(future.data),
+        next_id=future.id,
+        video=active.video_link,
+        dict_name=active.dict_name,
+        dict_id=active.id,
+        list_of_dict=dict_schedule(all_dictations),
+    ))
 
 def count_results(request):
     if request.method == 'GET':
@@ -332,12 +290,15 @@ def custom_404(request):
 def test(request):
     return render(request,'test_json.html')
 
+@cache_page(15)
 def anons(request):
-    #if request.method == 'GET':
-        #dict_id = request.GET.get("dict_id")
-    #dictant = Dict_text.objects.get(id=dict_id)
-    #link_to_otschet = dictant.otschet
-    return render(request,'anons.html')#, {"link":link_to_otschet})
+    request.session.setdefault('uid', str(uuid4()))
+    all_dictations = Dict_text.objects.all()
+    active, future = active_future_dictation(all_dictations)
+    if active:
+        return write_dict(request, active, future, all_dictations)
+    else:
+        return render(request,'anons.html')#, {"link":link_to_otschet})
 
 def success(request):
     return render(request,'success.html')    

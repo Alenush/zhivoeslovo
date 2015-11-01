@@ -120,3 +120,5 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
     '/var/www/static/',
 )
+
+DICT_DURATION = 15 # minutes
