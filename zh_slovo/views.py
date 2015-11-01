@@ -90,27 +90,10 @@ def fill_user_arrays(user_borders, errors, dict_text):
     BUG! two errors in one or empty "" text
     :return:
     """
-    array = [[] for n in xrange(len(dict_text)+1)]
-    for i in xrange(0, len(array)):
-        all_errors = []
-        if len(user_borders) != 0: check_range =[user_borders[0]]
-        print "ERRORS", errors, user_borders
-        for part, error_tuple in izip(user_borders, errors):
-            one_error = error_tuple[0]
-            if part in check_range:
-                    all_errors.append(one_error)
-                    check_range.append(part)
-            if i in xrange(part[0],part[1]+1):#part[1]+1
-                    if part in check_range:
-                        array[i] = all_errors
-                    else:
-                        all_errors = [one_error]
-                        array[i] = all_errors
-                        check_range = []
-                        check_range.append(part)
-            else:
-                all_errors = []
-    print "ARRAY", array
+    array = [[] for n in xrange(len(dict_text))]
+	for (begin, end), error in izip(user_borders, errors):
+		for x in range(begin, end+1):
+			array[x].append(error)
     return array
 
 
@@ -131,7 +114,6 @@ def collect_markup(parts_array, user_text):
     markup = []
     text_part = ""
     last_error = []
-    dictionary = {}
     print "Array_wth_parts", parts_array, user_text,  len(parts_array), len(user_text)
     if len(parts_array) > len(user_text): user_text += " "
     for user, error in izip(user_text, parts_array):
@@ -139,19 +121,14 @@ def collect_markup(parts_array, user_text):
             text_part += user
         else:
             print "LAST_ERROR", last_error, error
-            answer = map(error2json, last_error)
-            print "ANSWER", answer
+            errors = map(error2json, last_error)
+            print "ANSWER", errors
             print "TEXT", text_part, user
-            dictionary["text"] = text_part
-            dictionary["errors"] = answer
-            markup.append(dictionary)
+            markup.append(dict(text=text_part, errors=errors))
             text_part = user
             last_error = error
-            dictionary = {}
-    answer = map(error2json, last_error)
-    dictionary["text"] = text_part
-    dictionary["errors"] = answer
-    markup.append(dictionary)
+    errors = map(error2json, last_error)
+    markup.append(dict(text=text_part, errors=errors))
     print "MARK UP: ", markup
     return markup
 
