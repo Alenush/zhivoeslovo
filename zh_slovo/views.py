@@ -8,6 +8,7 @@ import json
 import math
 import datetime
 from codecs import open
+from itertools import izip
 
 from django.shortcuts import render, render_to_response
 from django.shortcuts import redirect
@@ -42,7 +43,7 @@ def check_errors_in_db(result, dict_id): #add id_dict and text_user
         if op != "equal":
             if a2 == a1: # при вставке мы хотим иметь непустой диапазон букв со стороны orig
                 a2 += 1
-            for pos in range(a1, a2):
+            for pos in xrange(a1, a2):
                 er_object = Errors_table.objects.filter(id_dict=dict_id, symbol_place_in_sent=pos)
                 if len(er_object) != 0:
                     object_dic = er_object.values()[0]
@@ -63,9 +64,9 @@ def orig_to_user(result):
         # это не должно испортить отображение ощутимо, т.к. лишняя буква будет переписана более
         # точным соответствием на следующей итерации цикла
         stretch = int(math.ceil(float(a2 - a1)/(b2 - b1)))
-        user_range = [pos for pos in range(b1, b2) for repeat in xrange(stretch)]
+        user_range = [pos for pos in xrange(b1, b2) for repeat in xrange(stretch)]
         print operation, a1, a2, b1, b2, "stretch", stretch, "user", user_range
-        for i, j in zip(range(a1, a2), user_range):
+        for i, j in izip(xrange(a1, a2), user_range):
             orig2user[i] = j
     return orig2user
 
@@ -90,16 +91,16 @@ def fill_user_arrays(user_borders, errors, dict_text):
     :return:
     """
     array = [[] for n in xrange(len(dict_text)+1)]
-    for i in range(0, len(array)):
+    for i in xrange(0, len(array)):
         all_errors = []
         if len(user_borders) != 0: check_range =[user_borders[0]]
         print "ERRORS", errors, user_borders
-        for part, error_tuple in zip(user_borders, errors):
+        for part, error_tuple in izip(user_borders, errors):
             one_error = error_tuple[0]
             if part in check_range:
                     all_errors.append(one_error)
                     check_range.append(part)
-            if i in range(part[0],part[1]+1):#part[1]+1
+            if i in xrange(part[0],part[1]+1):#part[1]+1
                     if part in check_range:
                         array[i] = all_errors
                     else:
@@ -133,7 +134,7 @@ def collect_markup(parts_array, user_text):
     dictionary = {}
     print "Array_wth_parts", parts_array, user_text,  len(parts_array), len(user_text)
     if len(parts_array) > len(user_text): user_text += " "
-    for user, error in zip(user_text, parts_array):
+    for user, error in izip(user_text, parts_array):
         if error == last_error:
             text_part += user
         else:
