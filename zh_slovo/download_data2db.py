@@ -10,9 +10,7 @@ from nltk.tokenize import WordPunctTokenizer
 db_path = "../db.sqlite3"
 path = '/home/alenush/Рабочий стол/workspace/texts/'
 
-origin_dict = u"Когда душа носит в себе великую печаль, когда человек не настолько сладил с собой, \
-чтобы примириться с несправедливостью, ему нужны даль и горы, море и теплый кроткий воздух, для того чтобы грусть \
-не превратилась в ожесточение, в отчаяние. "
+origin_dict = u"..."
 
 
 def write_in_db(id, place_in_sent, token_begin, token_end, type, comment, right):
