@@ -87,10 +87,9 @@ def fill_user_arrays(user_borders, errors, dict_text):
     :param:errors: array with (er_object, tok_begin, tok_end))
     заводим список из кучи []; проходим по найденным диапазонам в координатах user,
     и дописываем в каждый [] по этим координатам описания ошибок, соответствующие этому диапазону
-    BUG! two errors in one or empty "" text
     :return:
     """
-    array = [[] for n in xrange(len(dict_text))]
+    array = [[] for n in xrange(len(dict_text) + 1)]
     for (begin, end), (error, ebegin, eend) in izip(user_borders, errors):
         for x in range(begin, end+1):
             array[x].append(error)
