@@ -1,0 +1,60 @@
+#instGallery
+{
+    position: relative;
+    background: rgba(0, 0, 0, .02);
+    padding:30px 0;
+}
+#carusel
+{
+    position: absolute;
+
+    width: 195%;
+}
+#instGallery .container
+{
+    position: relative;
+    overflow: hidden;
+    height: 400px;
+    
+}
+.instImg
+{
+    position: relative;
+    float: left;
+    overflow: hidden;
+}
+.controls
+{
+    font-size: 13px;
+    line-height: 30px;
+
+    display: inline-block;
+
+    width: 34px;
+    height: 34px;
+    margin: 0 2px;
+    border: 2px solid;
+}
+
+#caruselControl
+{
+    clear: both;
+    text-align: center;
+}
+#caruselControl .controls:hover
+{
+    cursor: pointer;
+    border-color: white;
+    background: #71D2EE;
+    color:white;
+    opacity:0.6;
+}
+.instImg div
+{
+    text-align: center;
+    padding:15px 0;
+}
+.instImg img
+{
+    width: 40%;
+}

@@ -113,24 +113,44 @@ def collect_markup(parts_array, user_text):
     markup = []
     text_part = ""
     last_error = []
+    dictionary = {}
     print "Array_wth_parts", parts_array, user_text,  len(parts_array), len(user_text)
     if len(parts_array) > len(user_text): user_text += " "
-    for user, error in izip(user_text, parts_array):
+    for user, error in zip(user_text, parts_array):
         if error == last_error:
             text_part += user
         else:
             print "LAST_ERROR", last_error, error
-            errors = map(error2json, last_error)
-            print "ANSWER", errors
+            answer = []
+            for one_s_error in last_error:
+                if len(one_s_error) == 1:
+                    answer.append({
+                     "type": one_s_error[0].type_of_error,
+                    "comment": one_s_error[0].comments_to_error,
+                    "right_answer": one_s_error[0].right_answer,
+                    })
+                else:
+                    for one in one_s_error:
+                         answer.append({
+                         "type": one.type_of_error,
+                        "comment": one.comments_to_error,
+                        "right_answer": one.right_answer,
+                            })
+            #answer = map(error2json, last_error)
+            print "ANSWER", answer
             print "TEXT", text_part, user
-            markup.append(dict(text=text_part, errors=errors))
+            dictionary["text"] = text_part
+            dictionary["errors"] = answer
+            markup.append(dictionary)
             text_part = user
             last_error = error
-    errors = map(error2json, last_error)
-    markup.append(dict(text=text_part, errors=errors))
+            dictionary = {}
+    answer = map(error2json, last_error)
+    dictionary["text"] = text_part
+    dictionary["errors"] = answer
+    markup.append(dictionary)
     print "MARK UP: ", markup
     return markup
-
 
 def count_errors(markup):
     #- проходим по словарям, и считаем, сколько итоговых словарей содержат хотя бы одну орфографическую ошибку,
@@ -337,9 +357,13 @@ def custom_404(request):
 def test(request):
     return render(request,'test_json.html')
     
-    
+ 
 def anons(request):
-    return render(request,'anons.html')
+    #if request.method == 'GET':
+        #dict_id = request.GET.get("dict_id")
+	#dictant = Dict_text.objects.get(id=dict_id)
+	#link_to_otschet = dictant.otschet
+    return render(request,'anons.html')#, {"link":link_to_otschet})
     
 def success(request):
     return render(request,'success.html')    

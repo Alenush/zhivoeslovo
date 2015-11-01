@@ -5,95 +5,101 @@
     <title>Живое слово</title>
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/bootstrap/css/bootstrap.css' %}" />
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/fontello.css' /%}">
     <link rel="stylesheet" type="text/css" href="{% static 'zh_slovo/css/style.css' /%}">
     <link rel="stylesheet" href="{% static 'zh_slovo/magnific-popup/dist/magnific-popup.css' %}">
-    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/adopt_style.css' /%}">
+    
     <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/magnific.css' /%}">
     <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/preload.css' /%}">
-   
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/help_animation.css' /%}">
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/carusel.css' /%}">
+    
+    <link rel='stylesheet' type='text/css' href="{% static 'zh_slovo/css/adopt_style.css' /%}">
+     
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'zh_slovo/js/antonJS.js' %}"></script>
     <script type="text/javascript" src="{% static 'zh_slovo/magnific-popup/dist/jquery.magnific-popup.js' %}"></script>
     <script type="text/javascript" src="{% static 'zh_slovo/js/main.js' %}"></script>
-
+    <script type="text/javascript" src="{% static 'zh_slovo/js/InstSlider.js' %}"></script>
+    
     <div class="wrapper">
-        <header>
-          <div class="container">
-            <a href="http://totaldict.ru/"><div class="logo"></div></a>
-          </div>  
-        </header>
-        <div class="container mersy hide">
-          <div class="row">
-            <p class="col-sm-12">Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold nextDataTime">23 ноября</span> и будет доступен с <span class="bold nextTime">20:45</span></p>
-          </div>
-        </div>
-        <div class="container sm hide">
-          <div class="row">
-            <div class="col-sm-6"><img src="{% static 'zh_slovo/images/sad_owl.png' /%}" alt="sova" class="sad_owl"> </div>
-            <div class="col-sm-6">
-              <img src="{% static 'zh_slovo/images/sm.png' %}" alt="sm">
-              <h2>«Даже в его молчании встречались грамматические ошибки»</h2>
-              <p class="right">Станислав Ежи Лец</p>
-             
-            </div>
-          </div>
-        </div>
-         <div class="container exellent hide">
-          <div class="row">
-            <div class="col-sm-6">
-              <h1>Поздравляем, ваша оценка</h1>
-            </div>
-            <div class="col-sm-6">
-              <p class="red five bold">5</p>
-            </div>
-          </div>
-          <div class="row"></div>
-          <div class="row">
-            
-            <form role="form" class="col-sm-6" id = "exellentDictionForm" action="/zhivoeslovo/ajax/send_results/" method="GET">
-              <input type="hidden" name = "dict_id" value = "{{ dict_id }}">
-              <div class="form-group"><p>Если Вы хотите участвовать в съемках программы в студии, заполните, пожалуйста, анкету.</p></div>
-              
-              <div class="form-group">
-                <label for="name">Имя</label>
-                <input type="text" class="form-control" id="name" required  name="username">
-              </div>
-              <div class="form-group">
-                <label for="age">Возраст</label>
-                <input type="number" min="0" max="100" class="form-control" required  id="age" name="age">
-              </div>
-              <div class="form-group">
-                <div><label>Пол</label></div>
-                <label class="radio-inline"><input type="radio" value="male" required  name="sex">мужской</label>
-                <label class="radio-inline"><input type="radio" value="female" required name="sex">женский</label>
-              </div>
-              <div class="form-group">
-                <label for="city">Город</label>
-                <input type="text" class="form-control" id="city" required name="city"
-              <div class="form-group">
-                <label for="edu">Образование</label>
-                <input type="text" class="form-control" id="edu" required name="edu">
-              </div>
-               <div class="form-group">
-                <label for="prof">Профессия</label>
-                <input type="text" class="form-control" id="prof" required name="prof">
-              </div>
-              <div class="form-group">
-                <label for="email">Адрес электронной почты</label>
-                <input type="email" class="form-control" id="email" required name="email">
-              </div>
-              <div class="form-group">
-                <label for="key">Код</label>
-                <input type="text" class="form-control" id="key" required name="confirmation" readonly>
-              </div>
-              <button type="submit" class="white btn btn-danger button" id="pers_data_submit">Отправить</button>
-            </form>
-            <div class="col-sm-6 sova"><img src="{% static 'zh_slovo/images/sova.png' %}" alt="sova"></div>
-          </div>
+      <header>
+        <div class="container">
+          <a href="http://totaldict.ru/"><div class="logo"></div></a>
         </div>
         
-        <div class="container result hide">
-          <div class="row">
+      </header>
+      <div class="container mersy hide">
+        <div class="row">
+          <p class="col-sm-12">Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold nextDataTime">23 ноября</span> и будет доступен с <span class="bold nextTime">20:45</span></p>
+        </div>
+      </div>
+      <div class="container sm hide">
+        <div class="row">
+          <div class="col-sm-6"><img src="{% static 'zh_slovo/images/sad_owl.png' /%}" alt="sova" class="sad_owl"></div>
+          <div class="col-sm-6">
+            <img src="{% static 'zh_slovo/images/sm.png' %}" alt="sm">
+            <h2>«Даже в его молчании встречались грамматические ошибки»</h2>
+            <p class="right">Станислав Ежи Лец</p>
+          </div>
+        </div>
+      </div>
+      <div class="container exellent hide">
+        <div class="row">
+          <div class="col-sm-6">
+            <h1>Поздравляем, ваша оценка</h1>
+          </div>
+          <div class="col-sm-6">
+            <p class="red five bold">5</p>
+          </div>
+        </div>
+        <div class="row"></div>
+        <div class="row">
+          <form role="form" class="col-sm-6" id = "exellentDictionForm" action="/zhivoeslovo/ajax/send_results/" method="GET">
+            <input type="hidden" name = "dict_id" value = "{{ dict_id }}">
+            <div class="form-group">
+              <p>Если Вы хотите участвовать в съемках программы в студии, заполните, пожалуйста, анкету.</p>
+            </div>
+            <div class="form-group">
+              <label for="name">Имя</label>
+              <input type="text" class="form-control" id="name" required  name="username">
+            </div>
+            <div class="form-group">
+              <label for="age">Возраст</label>
+              <input type="number" min="0" max="100" class="form-control" required  id="age" name="age">
+            </div>
+            <div class="form-group">
+              <div><label>Пол</label></div>
+              <label class="radio-inline"><input type="radio" value="male" required  name="sex">мужской</label>
+              <label class="radio-inline"><input type="radio" value="female" required name="sex">женский</label>
+            </div>
+            <div class="form-group">
+              <label for="city">Город</label>
+              <input type="text" class="form-control" id="city" required name="city">
+            </div>
+            <div class="form-group">
+              <label for="edu">Образование</label>
+              <input type="text" class="form-control" id="edu" required name="edu">
+            </div>
+            <div class="form-group">
+              <label for="prof">Профессия</label>
+              <input type="text" class="form-control" id="prof" required name="prof">
+            </div>
+            <div class="form-group">
+              <label for="email">Адрес электронной почты</label>
+              <input type="email" class="form-control" id="email" required name="email">
+            </div>
+            <div class="form-group">
+              <label for="key">Код</label>
+              <input type="text" class="form-control" id="key" required name="confirmation" readonly>
+            </div>
+            <button type="submit" class="white btn btn-danger button" id="pers_data_submit">Отправить</button>
+          </form>
+          <div class="col-sm-6 sova"><img src="{% static 'zh_slovo/images/sova.png' %}" alt="sova"></div>
+        </div>
+      </div>
+      <div class="container result hide">
+        <div class="row">
            <div class="col-md-8 col-md-offset-2">
             <div class="report center col-md-9 col-md-offset-1">
               <h2 class="red" id="mark">Ваша оценка</h2>
@@ -101,64 +107,109 @@
             </div>
           </div>
         </div>
+        <div class="row row_help">
+          <div class="col-md-8 help_container">
+            <div class="col-xs-1 help_icon">
+              <img src="{% static 'zh_slovo/images/vop.png' %}"  alt="help">
+            </div>
+            <div class="col-xs-8 help light_grey shrink_reverse">
+              <span>Слова и пунктуационные знаки с ошибками выделены красным. Кликните по ошибке, чтобы увидеть правило. </span> 
+            </div>
+        </div>
+        </div>
         <div class="row main-text">
           <div id="originalText" class="col-md-8  col-md-offset-0 col-xs-8  col-xs-offset-2"></div>
-          <div class="col-md-4 col-md-offset-0 col-xs-8 col-xs-offset-2 mar_top" id ="blockRules">
-            </div>
-          </div>
-          <div class="col-md-8">
-      <div class="col-xs-2">
-        <img src="{% static 'zh_slovo/images/vop.png' %}" class="help_icon" alt="help">
-      </div>
-      <div class="col-xs-9 help light_grey">
-        <span >Слова и пунктуационные знаки с ошибками выделены красным. Кликните по ошибке, чтобы увидеть правило. </span>
-      </div>
-        
-      </div>
+          <div class="col-md-4 col-md-offset-0 col-xs-8 col-xs-offset-2 mar_top" id ="blockRules"></div>
         </div>
+      </div>
+      <div class="container-fluid hide" id="instGallery">
+      <div class="container">
+        <p class="bold">Библиография:</p>
+        <div id="carusel">
+          <div class="instImg col-sm-4 col-md-2">
+            <div>
+              <img src="{% static 'zh_slovo/images/biblio/PAS.jpg' /%}" alt="ПАС">
+            </div>
+            <p>ПАС&nbsp;&mdash; Правила русской орфографии и&nbsp;пунктуации. Полный академический справочник&nbsp;/ Под ред. В.В. Лопатина. М, 2006. (и&nbsp;последующие издания)</p>
           </div>
-        <div class="container dictation">
-         <div class="row">
-           <div class="col-lg-5 col-md-5 col-sm-6 dark_grey" id="first_dictation">
-             <h2>{{ dict_name }}</h2>
-           </div>
-           <div class="col-lg-5 col-md-5 col-sm-10 col-lg-offset-2 col-md-offset-2 right">
-             <p class="addtext">
-               читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина 
-             </p>
-           </div>
+          <div class="instImg col-sm-4 col-md-2">
+            <div>
+              <img src="{% static 'zh_slovo/images/biblio/OROS.jpg' /%}" alt="ОРОС">
+            </div>
+            <p>ОРОС&nbsp;&mdash; Бешенкова Е.В., Иванова О.Е., Чельцова Л.К. Объяснительный русский орфографический словарь-справочник. &mdash;&nbsp;М., 2015.</p>
+          </div>
+          <div class="instImg col-sm-4 col-md-2">
+            <div>
+              <img src="{% static 'zh_slovo/images/biblio/Ros1.jpg' /%}" alt="Розенталь">
+            </div>
+            <p>Розенталь&nbsp;&mdash; Розенталь&nbsp;Д.&nbsp;Э., Джанджакова&nbsp;Е.&nbsp;В., Кабанова Н.&nbsp;П. Справочник по&nbsp;русскому языку: правописание, произношение, литературное редактирование. 7-е изд. М., 2010.</p>
+          </div>
+          <div class="instImg col-sm-4 col-md-2">
+            <div>
+              <img src="{% static 'zh_slovo/images/biblio/SRO.jpg' /%}" alt="Современная русская орфография">
+            </div>
+            <p>Кайдалова, Калинина, 1983&nbsp;&mdash; Кайдалова А.И., Калинина Н.К. Современная русская орфография. 4-е изд., испр. и&nbsp;доп. М: Высш.&nbsp;шк.&nbsp;1983.</p>
+          </div>
+          <div class="instImg col-sm-4 col-md-2" id="lastImg">
+            <div>
+              <img src="{% static 'zh_slovo/images/biblio/Ros2.jpg' /%}" alt="Розенталь">
+            </div>
+            <p>Розенталь. Пунктуация&nbsp;&mdash; Розенталь Д.Э. Справочник по&nbsp;русскому языку. Пунктуация. М., 2002.</p>
+          </div>
+          
+        </div>
+      </div>
+      <div id="caruselControl">
+        <div id="careselControlLeft" class="controls icon-left-open-1"></div>
+        <div id="careselControlRight" class="controls icon-right-open-1"></div>
+      </div>
+    </div>
+      <div class="container dictation">
+       <div class="row">
+         <div class="col-lg-5 col-md-5 col-sm-6 dark_grey" id="first_dictation">
+           <h2>{{ dict_name }}</h2>
          </div>
-         <div class="row">
-             <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
-               <iframe class="col-xs-12 video" src="{{video}}" allowfullscreen></iframe>
-             </div>
-             <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
-              <form  id = "dictionForm" action="/zhivoeslovo/ajax/results/" method="GET">
-                {% csrf_token %}
-                <input type="hidden" name = "dict_id" value = "{{ dict_id }}">
-                <textarea name ="dict_text" class="col-xs-12" spellcheck="false" id="custom_text" placeholder="пишите диктант здесь"></textarea>
-                <button class="white btn btn-danger button bold" id="open_pop" data-effect="mfp-zoom-in">
-                  <div  class="inline">
-                    <p>Проверить</p>
-                  </div>
-                  <div class="inline ">
-                    <p class="glyphicon glyphicon-chevron-right"></p>
-                  </div>
-                </button>
-              </form>
-            </div>
+         <div class="col-lg-5 col-md-5 col-sm-10 col-lg-offset-2 col-md-offset-2 right">
+           <p class="addtext">
+             читает Аннушкин В. И., профессор кафедры русской словесности и межкультурной коммуникации Института русского языка им. А.С. Пушкина 
+           </p>
+         </div>
+       </div>
+       <div class="row">
+           <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
+             <iframe class="col-xs-12 video" src="{{video}}" allowfullscreen></iframe>
+           </div>
+           <div class="col-lg-6 col-md-6 col-md-offset-0 col-sm-8 col-sm-offset-2">
+            <form  id = "dictionForm" action="/zhivoeslovo/ajax/results/" method="GET">
+              {% csrf_token %}
+              <input type="hidden" name = "dict_id" value = "{{ dict_id }}">
+              <textarea name ="dict_text" class="col-xs-12" spellcheck="false" id="custom_text" placeholder="пишите диктант здесь"></textarea>
+              <button class="white btn btn-danger button bold" id="open_pop" data-effect="mfp-zoom-in">
+                <div class="inline">
+                  <p>Проверить</p>
+                </div>
+                <div class="inline ">
+                  <p class="glyphicon glyphicon-chevron-right"></p>
+                </div>
+              </button>
+            </form>
           </div>
         </div>
-        <footer class="container-fluid">
-          <div class="container">
-              <div class="row">
-                  <div class="col-md-8 col-md-offset-2 calendar">
-                  <script> var all_dict = "{{ list_of_dict }}"; var next_date = "{{ next_date}}"; var next_id = "{{next_id}}"; var next_month = "{{ next_month }}"; var next_time = "{{next_time}}";</script>
-                  <h2 class=" timetable">Расписание диктантов</h2>
-                </div> 
-            </div>
+      </div>
+      <footer class="container-fluid">
+        <div class="container dark_block">
+          <div class="row">
+              <div class="col-md-8 calendar">
+              <script> var all_dict = "{{ list_of_dict }}"; var next_date = "{{ next_date}}"; var next_id = "{{next_id}}"; var next_month = "{{ next_month }}"; var next_time = "{{next_time}}";</script>
+              <h2 class=" timetable">Расписание диктантов</h2>
+            </div> 
+            <div class="clock right">
+            <iframe frameborder="no" scrolling="no" style="width:150px;height:280px;" src="https://time.yandex.ru/widget/?geoid=213&lang=ru&layout=vert&type=analog&face=serif"></iframe>
           </div>
-        </footer>
+          </div>
+        </div>
+      </footer>
+      <div class="container-fluid grey_block">
         <div class="container">
           <div class="row standart_info">
             <div class="col-md-6">
@@ -168,14 +219,15 @@
           </div>
         </div>
       </div>
-      <div id="check_send" class="white-popup mfp-hide mfp-with-anim">
+    </div>
+    <div id="check_send" class="white-popup mfp-hide mfp-with-anim">
       <div class="massage">
         <p class="bold">Внимание!</p>
         <p class="row">Вы действительно закончили работу с текстом и готовы отправить его на проверку?</p>
       </div>
       <div>
-        <button class="white btn btn-danger button bold" id="yes">да</button>
-        <button class="btn button btn-default bold" id="close">нет</button>
+        <button class="white btn btn-danger button bold w_o_m" id="yes">да</button>
+        <button class="btn button btn-default bold w_o_m" id="close">нет</button>
       </div>
     </div>
     <div class="preload hide">
@@ -185,3 +237,4 @@
     </div>
   </body>
 </html>
+

@@ -4,8 +4,8 @@
 
 $( document ).ready(function() {
     inform();
-    sendFormToServer();
     calendar();
+    sendFormToServer();
 });
 
 function inform(){
@@ -112,12 +112,12 @@ function sendFormToServer(){ //основная форма ajax отправки
                         allErrors.push( data.markup[i] );
                         if( data.markup[i].errors.length < 2){
                             if ( data.markup[i].errors[0].type == "PU" ) {
-                                var spanError = '<span id = "error' + numberOfErrors +'" class = "PU errorsInOriginText">'+ data.markup[i].text +'</span> ';
+                                var spanError = '<span id = "error' + numberOfErrors +'" class = "PU errorsInOriginText">'+ data.markup[i].text +'</span>';
                             } else {
-                                var spanError = '<span id = "error' + numberOfErrors +'" class = "OR errorsInOriginText">'+ data.markup[i].text +'</span> ';
+                                var spanError = '<span id = "error' + numberOfErrors +'" class = "OR errorsInOriginText">'+ data.markup[i].text +'</span>';
                             }
                         } else {
-                            var spanError = '<span id = "error' + numberOfErrors +'" class = "OR errorsInOriginText">'+ data.markup[i].text +'</span> ';
+                            var spanError = '<span id = "error' + numberOfErrors +'" class = "OR errorsInOriginText">'+ data.markup[i].text +'</span>';
                         }
                         allText += spanError;
                         numberOfErrors++;
@@ -179,6 +179,7 @@ function sendFormToServer(){ //основная форма ajax отправки
                 });
                 //click On Error ====the end====
                 $(".result").removeClass("hide");
+                $("#instGallery").removeClass("hide");
                 $('.dictation').addClass("hide");
                 $(".preload").addClass("hide");
                 $("#setOfRules0").css("display", "block");
@@ -203,4 +204,3 @@ function sendFormToServer(){ //основная форма ajax отправки
     //     });
     // });
 }
-

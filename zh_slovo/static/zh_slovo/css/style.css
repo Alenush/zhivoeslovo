@@ -2,10 +2,20 @@
 body{
   font-weight: 400; 
 }
-a, button{
-  -webkit-transition: all 150ms ease-in;
-  -moz-transition: all 150ms ease-in;
-  -o-transition: all 150ms ease-in;
+a{
+  border-bottom: 1px solid #a4a4a4;
+  color: #1c1c1c;
+  text-decoration: none;
+}
+a:hover{
+  border-bottom: 1px solid transparent;
+  color: #de3b1b;
+  text-decoration: none;
+}
+a, button, #caruselControl .controls{
+  -webkit-transition: all 200ms ease-in;
+  -moz-transition: all 200ms ease-in;
+  -o-transition: all 200ms ease-in;
 }
 .inline{
   display: inline-block;
@@ -16,7 +26,7 @@ a, button{
 .row{
   margin: 50px 0;
 }
-.massage .row, footer, .grey_block, .megatimer, .standart_info, .mersy .row{
+.massage .row, footer, .grey_block, .megatimer, .standart_info, .mersy .row, .row_help, .row_help + .main-text{
   margin: 30px 0;
 }
 header .container{
@@ -29,13 +39,13 @@ header .container{
 footer{
   margin: 50px;
   margin-bottom:0;
-  background: url(../images/footer.png) 0 0 no-repeat;
   background-position: center;
   background-size: cover;
   /*background-attachment: fixed;*/
 }
 .calendar div{
   margin: 20px 0;
+  color:white;
 }
 .act{
    outline: white 3px solid;
@@ -43,9 +53,8 @@ footer{
 }
 .timetable{
   border-bottom:1px solid white;
-  padding:15px;
+  padding:15px 0px;
   margin-bottom:15px;
-  text-align:center;
   color:white;
 }
 .logo{
@@ -129,6 +138,13 @@ p{
 }
 .grey_block{
   background-color: #e8e8e8;
+  margin-bottom:0;
+}
+.dark_block{
+  background:url(../images/footer.png) 0 0 no-repeat;
+  background-position: center;
+  background-size: cover;
+  position:relative;
 }
 /* цвет текста */
 .white{
@@ -141,19 +157,29 @@ p{
   color: #333;
 }
 .red{
-  color:#de3b1b;
+  color:#de3b1b!important;
 }
 .green{
   color: green;
 }
 
-.help{
-  padding-top: 13px;
-}
-.help_icon{
-  width: 100%;
-}
 
+.help_container{
+  overflow: hidden;
+  padding: 0;
+}
+.help_icon{ 
+  background-color: white;
+  position: relative;
+  z-index: 10000;
+}
+.help_icon img{ 
+  width: 100%;
+  cursor:pointer;
+}
+.help_icon img: hover{ 
+  opacity:0.7;
+}
 #check_send{
   background: white;
   
@@ -165,7 +191,7 @@ p{
 .massage{
   padding: 10px 30px;
 }
-#yes, #close{
+.w_o_m{
   margin:0;
 }
 .rulez{
@@ -182,4 +208,5 @@ p{
   padding:0 5px;
   cursor: pointer;
 }
+
 

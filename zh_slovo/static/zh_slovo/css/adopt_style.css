@@ -12,5 +12,17 @@
  h1{
    font-size:56px;
  }
+ 
+ #caruselControl{
+   display:none;
+ }
+  #carusel {
+    position: relative;
+    width: auto;
+    left:0!important;
+  }
+  #instGallery .container{
+    height: auto;
+  }
 }
 
