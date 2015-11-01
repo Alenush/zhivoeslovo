@@ -15,13 +15,14 @@
     position: relative;
     overflow: hidden;
     height: 400px;
-    
+
 }
 .instImg
 {
     position: relative;
     float: left;
     overflow: hidden;
+    margin: auto 5px;
 }
 .controls
 {

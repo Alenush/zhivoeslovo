@@ -27,7 +27,7 @@ var InstCarusel = {
     InstCarusel.leftButton.off();
     var action = {};
     var attr = 'left';
-    var fullMoveSize = InstCarusel.sizeImg+10
+    var fullMoveSize = InstCarusel.sizeImg+30
     action[attr] = ''+direction+'='+fullMoveSize+'px';
     InstCarusel.carusel.animate(action,1000,function(){
       InstCarusel.moveButton();
@@ -35,7 +35,7 @@ var InstCarusel = {
   },
   makeMeFirst:function(){
     if(InstCarusel.currentImg>0){
-      var position = '-'+(InstCarusel.sizeImg+10)*InstCarusel.currentImg+'px'
+      var position = '-'+(InstCarusel.sizeImg+30)*InstCarusel.currentImg+'px'
     }
     else{
       var position = 'auto'
