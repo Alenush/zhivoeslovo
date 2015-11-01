@@ -7,7 +7,7 @@ import sys
 import re
 
 # Wrap sys.stdout into a StreamWriter to allow writing unicode.
-sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
+# sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
 
 
 PUNCT = ['.', ',', ';', '!', '?']
