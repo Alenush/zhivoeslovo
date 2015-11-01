@@ -251,16 +251,18 @@ def select_date_time(object_dictionary):
     return next_date_ar.data, next_date_ar.id
 
 
+dash_re = re.compile(r'[—––—‒–—―‒–—―⁓⸺⸻‐_~¯ˉˍ˗˜‐‑‾⁃⁻₋−∼⎯⏤─➖𐆑]')
 space_re = re.compile(r'\s+(-+\s+)?')
 sentence_re = re.compile(r'(?:[.][.][.]|[.]|[?]|[?][!]|[!])$')
 def normalize_user_text(user_text):
     r"""
     Example:
 
-    >>> print normalize_user_text('\r\nЯ   нёс - домой - кулёк\tконфет , вдруг навстречу мне сосед?')
+    >>> print normalize_user_text('\r\nЯ   нёс — домой - кулёк\tконфет , вдруг навстречу мне сосед?')
     Я нёс домой кулёк конфет, вдруг навстречу мне сосед.
     """
     user_text = user_text.strip()
+	user_text = dash_re.sub('-', user_text)
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
