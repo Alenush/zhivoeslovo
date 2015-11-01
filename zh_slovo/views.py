@@ -295,10 +295,12 @@ def anons(request):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
+    print "ACTIVE", future.data, future.otschet
+    link_to_otschet = future.otschet
     if active:
         return write_dict(request, active, future, all_dictations)
     else:
-        return render(request,'anons.html')#, {"link":link_to_otschet})
+        return render(request,'anons.html', {"link":link_to_otschet})
 
 def success(request):
     return render(request,'success.html')    

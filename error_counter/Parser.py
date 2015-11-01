@@ -1,7 +1,10 @@
 #-*- coding: utf-8 -*-
+__author__ = 'rover'
+
 import codecs
 import locale
 import sys
+import re
 
 # Wrap sys.stdout into a StreamWriter to allow writing unicode.
 # sys.stdout = codecs.getwriter(locale.getpreferredencoding())(sys.stdout)
@@ -87,52 +90,35 @@ class Token:
         return  list
 
 class Parser:
+    word_regex = u"([А-я]+|\[(\[[А-я]+(/\d+)+\]|[А-я]*(/\d+)*)+\])+"
+    sep_regex = u"(?P<sep>\s+|\[\s+(?P<sep_rules>/\d+)+\])+"
+    punct_regex = u"(\s*([.,!?]|\{[.,!?](/\d+)+\})\s*)"
+    regex = re.compile("|".join([word_regex, punct_regex, sep_regex]), re.UNICODE)
+
     def __init__(self):
         self.tokens = []
 
     def parse(self, text):
-        current_token = ""
-        mark_count = 0
-        sep_marked = False
-        for char in text:
-            if char in MARK_START:
-                mark_count += 1
-                current_token += char
-            elif char in MARK_END:
-                mark_count -= 1
-                current_token += char
-                if mark_count == 0 and sep_marked:
-                    sep_marked = False
-                    self.tokens.append(Token(current_token))
-                    current_token = ""
-            elif char in PUNCT or char in SEP:
-                new_token = ""
-                new_mark_count = mark_count
-                while len(current_token) > 0 and mark_count > 0:
-                    if current_token[-1] in MARK_START:
-                        mark_count -= 1
-                    new_token = current_token[-1] + new_token
-                    current_token = current_token[:-1]
-                if current_token != "":
-                    self.tokens.append(Token(current_token))
-                    current_token = ""
-                if new_mark_count > 0:
-                    sep_marked = True
-                    current_token = new_token + char
-                    mark_count = new_mark_count
-                elif char in PUNCT:
-                    # знак препинания будет токеном
-                    self.tokens.append(Token(char))
+        iter = Parser.regex.finditer(text)
+        prev = ""
+        try:
+            while True:
+                mo = iter.next()
+                if not mo.group("sep") is None and prev != "":
+                    if not mo.group("sep_rules") is None:
+                        self.tokens.append(Token(prev + mo.group().strip()))
+                    else:
+                        self.tokens.append(Token(prev + "{ /0}"))
+                    prev = ""
+                elif prev != "":
+                    self.tokens.append(Token(prev))
+                    prev = mo.group().strip()
                 else:
-                    # это разделитель
-                    if len(self.tokens) > 0:
-                        prev = self.tokens[-1].text
-                        # если перед разделителем есть токен и это не разделитель и не знак препинания
-                        # то разделитель будет токеном
-                        if not prev in PUNCT and not prev in SEP:
-                            self.tokens.append(Token("{%s/0}" % char))
-            else:
-                current_token += char
+                    prev = mo.group().strip()
+        except StopIteration:
+            pass
+        if prev != "":
+            self.tokens.append(Token(prev))
 
 
 if __name__ == "__main__":
@@ -161,13 +147,13 @@ if __name__ == "__main__":
     text = parts[0][0]
     rules_or = parts[1]
     rules_pu = parts[2]
-    rules_pu.insert(0, u"На этом месте не может быть знаков препинания.")
+    rules_pu.insert(0, u"На этом месте не может быть знаков препинания")
 
     parser = Parser()
     parser.parse(text)
 
     for num, tok in enumerate(parser.tokens):
-        #print num, tok.raw
+        # print num, tok.raw
         for error in tok.get_errors():
             for rule in error.rules:
                 rule_txt = ""
@@ -175,6 +161,4 @@ if __name__ == "__main__":
                     rule_txt = rules_or[int(rule) - 1]
                 else:
                     rule_txt = rules_pu[int(rule)]
-                print FIELD_SEP.join([str(num), str(error.start), str(error.end), error.type, tok.text, rule_txt])
-
-
+                print FIELD_SEP.join([str(num), str(error.start), str(error.end), error.type, tok.text.strip(), rule_txt])
