@@ -19,10 +19,10 @@ from django.conf import settings
 from .models import Dict_text, Errors_table, Answer_user
 
 try:
-	import memcache
-	from django.views.decorators.cache import cache_page
+    import memcache
+    from django.views.decorators.cache import cache_page
 except ImportError:
-	cache_page = lambda t: (lambda f: f)
+    cache_page = lambda t: (lambda f: f)
 
 
 def check_errors_in_db(result, dict_id): #add id_dict and text_user
@@ -273,13 +273,19 @@ def select_date_time(object_dictionary):
     return next_date_ar.data, next_date_ar.id
 
 
+space_re = re.compile(r'\s+(-+\s+)?')
+sentence_re = re.compile(r'(?:[.][.][.]|[.]|[?]|[?][!]|[!])$')
 def normalize_user_text(user_text):
-    if user_text[0] == " ": user_text = user_text[1:]
-    print user_text
-    if user_text[-1] == " ": user_text = user_text[:-1]
-    print user_text
-    user_text = user_text.replace("\n", "").replace("\r","").replace("  ,", ",").replace("  "," ").replace("!",".").replace("...",".").replace("?",".").replace(" - ", " ")
-    print user_text
+    r"""
+    Example:
+
+    >>> print normalize_user_text('\r\nЯ   нёс - домой - кулёк\tконфет , вдруг навстречу мне сосед?')
+    Я нёс домой кулёк конфет, вдруг навстречу мне сосед.
+    """
+    user_text = user_text.strip()
+    user_text = space_re.sub(' ', user_text)
+    user_text = sentence_re.sub('.', user_text)
+    user_text = user_text.replace(" ,", ",")
     return user_text
 
 
@@ -358,3 +364,8 @@ def anons(request):
     
 def success(request):
     return render(request,'success.html')    
+
+def selftest(request):
+    import doctest
+    from zh_slovo import views
+    return HttpResponse(str(doctest.testmod(views)), content_type='text/plain')
