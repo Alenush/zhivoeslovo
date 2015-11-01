@@ -91,9 +91,9 @@ def fill_user_arrays(user_borders, errors, dict_text):
     :return:
     """
     array = [[] for n in xrange(len(dict_text))]
-	for (begin, end), error in izip(user_borders, errors):
-		for x in range(begin, end+1):
-			array[x].append(error)
+    for (begin, end), (error, ebegin, eend) in izip(user_borders, errors):
+        for x in range(begin, end+1):
+            array[x].append(error)
     return array
 
 
@@ -316,8 +316,7 @@ def count_results(request):
 
         results = {"grade": grade, "confirmation": user_hash,
                    "markup": markup, "punct_errors": p_er, "ortho_errors":or_er}
-        json = simplejson.dumps(results)
-        return HttpResponse(json, content_type='application/json')
+        return HttpResponse(json.dumps(results), content_type='application/json')
 
 
 def send_good_result(request):
