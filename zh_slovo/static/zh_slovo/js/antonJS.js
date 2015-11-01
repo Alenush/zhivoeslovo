@@ -9,11 +9,11 @@ $( document ).ready(function() {
 });
 
 function inform(){
-    console.log("id следующего диктанта: " + next_id );
-    console.log("дата следующего диктанта: " + next_date);
-    console.log("месяц следующего диктанта: " + next_month);
-    console.log("время следующего диктанта: " + next_time);
-    console.log("список всех диктантов: " + all_dict);
+    // console.log("id следующего диктанта: " + next_id );
+    // console.log("дата следующего диктанта: " + next_date);
+    // console.log("месяц следующего диктанта: " + next_month);
+    // console.log("время следующего диктанта: " + next_time);
+    // console.log("список всех диктантов: " + all_dict);
     
     //console.log( newAll_dict2 );
     
@@ -29,7 +29,7 @@ function calendar(){
     var newAlldict = $.parseJSON( all_dict );
     var numbersOfcalendar = "";
     
-    console.dir( newAlldict );
+    // console.dir( newAlldict );
     
     for(var i = 0; i < newAlldict.length ;i++){ //преобразую данные с сервера в нормальный вид
         var temprory = {};
@@ -83,8 +83,8 @@ function sendFormToServer(){ //основная форма ajax отправки
         event.preventDefault();
         
         $.getJSON("/zhivoeslovo/ajax/results/", $("#dictionForm").serialize(), function(data){
-            console.log("Ответ с сервера пришел:");
-            console.log(data);
+            // console.log("Ответ с сервера пришел:");
+            // console.log(data);
             //data.grade = 5;
             
             if (data.grade == 5) { //проверка приходящей оценки за диктант
@@ -126,7 +126,7 @@ function sendFormToServer(){ //основная форма ajax отправки
                     }
                 }
                 //Расфасовка информации с сервера =====the end======
-                console.dir(allErrors);
+                // console.dir(allErrors);
                 
                 //создание id="blockRules" ====start====
                 //создаем теги для html содержащие информацию об ошибках, для (div id="blockRules")
@@ -193,14 +193,14 @@ function sendFormToServer(){ //основная форма ajax отправки
         });
     });
     
-    // $('#exellentDictionForm').submit(function(event){ //отосладть данные об отличнике через ajax
-    //     event.preventDefault();
-    //     $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
-    //         console.log(data);
-    //         $(".preload").addClass("hide");
-    //     })
-    //     .error(function(data) {
-    //         console.log("Ошибка выполнения ajax"); 
-    //     });
-    // });
+    $('#exellentDictionForm').submit(function(event){ //отосладть данные об отличнике через ajax
+        event.preventDefault();
+        $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
+            console.log(data);
+            $(".preload").addClass("hide");
+        })
+        .error(function(data) {
+            console.log("Ошибка выполнения ajax"); 
+        });
+    });
 }

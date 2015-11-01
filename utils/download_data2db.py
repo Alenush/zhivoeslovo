@@ -8,10 +8,9 @@ import os, codecs
 from nltk.tokenize import WordPunctTokenizer
 
 db_path = "../db.sqlite3"
-path = '/home/alenush/Рабочий стол/workspace/texts/'
+path = '/home/alenush/Рабочий стол/texts/'
 
-origin_dict = u"..."
-
+origin_dict = "."
 
 def write_in_db(id, place_in_sent, token_begin, token_end, type, comment, right):
     #print id, place_in_sent, token_begin, token_end, type, comment, right
@@ -54,5 +53,5 @@ for filename in os.listdir(path):
     print filename
     txt = codecs.open(path+filename, 'r', 'utf8')
     text = txt.read()
-    id = 3
+    id = 1
     change_db2(text, origin_dict, id)

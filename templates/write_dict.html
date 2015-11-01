@@ -31,7 +31,7 @@
       </header>
       <div class="container mersy hide">
         <div class="row">
-          <p class="col-sm-12">Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold nextDataTime">23 ноября</span> и будет доступен с <span class="bold nextTime">20:45</span></p>
+          <p class="col-sm-12">Спасибо за участие в проекте. Ждем вас на следующем онлайн диктанте, который состоится <span class="bold nextDataTime">23 ноября</span> и будет доступен с <span class="bold nextTime">20:45</span> (мск*)</p>
         </div>
       </div>
       <div class="container sm hide">
@@ -103,7 +103,9 @@
            <div class="col-md-8 col-md-offset-2">
             <div class="report center col-md-9 col-md-offset-1">
               <h2 class="red" id="mark">Ваша оценка</h2>
-              <p>орфографических ошибок: <span id ="orthoErrors"></span>, пунктационных: <span id ="punctErrors"></span>.</p>
+              <p class="bold">Ошибки</p>
+              <p>Орфограмма: <span id ="orthoErrors"></span></p>
+              <p>Пунктуация: <span id ="punctErrors"></span></p>
             </div>
           </div>
         </div>
@@ -199,13 +201,18 @@
       <footer class="container-fluid">
         <div class="container dark_block">
           <div class="row">
-              <div class="col-md-8 calendar">
+            <div class="col-md-8 calendar">
               <script> var all_dict = "{{ list_of_dict }}"; var next_date = "{{ next_date}}"; var next_id = "{{next_id}}"; var next_month = "{{ next_month }}"; var next_time = "{{next_time}}";</script>
-              <h2 class=" timetable">Расписание диктантов</h2>
+              <h2 class="timetable">Расписание диктантов<span> (мск*)</span></h2>
             </div> 
             <div class="clock right">
-            <iframe frameborder="no" scrolling="no" style="width:150px;height:280px;" src="https://time.yandex.ru/widget/?geoid=213&lang=ru&layout=vert&type=analog&face=serif"></iframe>
+              <iframe frameborder="no" scrolling="no" style="width:150px;height:280px;" src="https://time.yandex.ru/widget/?geoid=213&lang=ru&layout=vert&type=analog&face=serif"></iframe>
+            </div>
           </div>
+          <div class="row">
+            <div class="col-md-8 white">
+              <p>*время московское</p>
+            </div>
           </div>
         </div>
       </footer>
@@ -237,4 +244,3 @@
     </div>
   </body>
 </html>
-
