@@ -277,7 +277,7 @@ def append_to_storage(filename, values, keys=None):
 # ========SEND TO TEMPlATE ===============================
 
 @cache_page(15)
-def begin_dict(request):
+def begin_dict(request, dict_id=None):
         all_dict = Dict_text.objects.all()
         list_of_all_dict = []
         date_dictionary = {}
@@ -291,6 +291,7 @@ def begin_dict(request):
             print "WEEK", week_day
             list_of_all_dict.append([int(date.split("-")[2]), int(date.split("-")[1]), week_day, int(t1), int(t2), date_info.id])
         next_date_time, next_id = select_date_time(date_dictionary)
+        if dict_id: next_id = int(dict_id)
         next_date = str(next_date_time).split(" ")[0]
         next_time = str(next_date_time).split(" ")[1]
         next_day, next_month = next_date.split("-")[2], next_date.split("-")[1]
