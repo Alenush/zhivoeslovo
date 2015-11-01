@@ -93,7 +93,7 @@ def fill_user_arrays(user_borders, errors, dict_text):
     array = [[] for n in xrange(len(dict_text) + 1)]
     for (begin, end), (error, ebegin, eend) in izip(user_borders, errors):
         for x in range(begin, end+1):
-            array[x].append(error)
+            array[x] += error
     return array
 
 
@@ -101,9 +101,9 @@ def error2json(error):
     """Convert error object to dictionary suitable for JSON.
     """
     return {
-        "type": error[0].type_of_error,
-        "comment": error[0].comments_to_error,
-        "right_answer": error[0].right_answer,
+        "type": error.type_of_error,
+        "comment": error.comments_to_error,
+        "right_answer": error.right_answer,
     }
 
 
@@ -163,7 +163,7 @@ def diff_strings(user, origin, dict_id):
     user_borders = token_borders2user(origin2user, errors) # user tokens with errors
     print "borders", user_borders
     array_with_parts = fill_user_arrays(user_borders, errors, user) #array with [[][][][Error][][Error][Error]]
-    print "parts", array_with_parts
+    print "parts", map(len, array_with_parts)
     markup = collect_markup(array_with_parts, user)
     or_er, p_er = count_errors(markup)
     grade = return_user_grade(or_er, p_er)
@@ -295,12 +295,10 @@ def anons(request):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
-    print "ACTIVE", future.data, future.otschet
-    link_to_otschet = future.otschet
     if active:
         return write_dict(request, active, future, all_dictations)
     else:
-        return render(request,'anons.html', {"link":link_to_otschet})
+        return render(request,'anons.html', dict(link=future.otschet))
 
 def success(request):
     return render(request,'success.html')    
