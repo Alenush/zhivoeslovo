@@ -262,7 +262,7 @@ def normalize_user_text(user_text):
     Я нёс домой кулёк конфет, вдруг навстречу мне сосед.
     """
     user_text = user_text.strip()
-	user_text = dash_re.sub('-', user_text)
+    user_text = dash_re.sub('-', user_text)
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
