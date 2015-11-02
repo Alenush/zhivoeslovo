@@ -27,10 +27,6 @@ $(document).ready(function(){
     else{alert("Введите, пожалуйста, текст диктанта")}
   });
   
-  // $('#pers_data_submit').on("click", function(){
-  //   $('.exellent').hide();
-  //   $(".preload").removeClass("hide");
-  // });
   
   /*$('#custom_text')[0].addEventListener('paste',function(event){
     event.preventDefault()
@@ -48,7 +44,6 @@ $(document).ready(function(){
     InstCarusel.makeMeFirst();
   })
   /*инстаграмовские фоточки*/
-  InstCarusel.sizeImg = $('.instImg').width();
   InstCarusel.carusel = $('#carusel');
   InstCarusel.lastImg = $('#lastImg');
 

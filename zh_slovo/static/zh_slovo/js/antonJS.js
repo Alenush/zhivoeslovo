@@ -180,6 +180,7 @@ function sendFormToServer(){ //основная форма ajax отправки
                 //click On Error ====the end====
                 $(".result").removeClass("hide");
                 $("#instGallery").removeClass("hide");
+                InstCarusel.sizeImg = $('.instImg').width();
                 $('.dictation').addClass("hide");
                 $(".preload").addClass("hide");
                 $("#setOfRules0").css("display", "block");
