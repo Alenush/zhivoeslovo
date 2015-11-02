@@ -15,8 +15,9 @@ $(document).ready(function(){
   
   Mywindow = $(window);
   widthWindow = window.innerWidth;
+  
   var help =  $('.help');
- 
+ var instraction =$('.instraction')
   
   $('#open_pop').on("click", function(event){
     event.preventDefault()
@@ -28,15 +29,20 @@ $(document).ready(function(){
   });
   
   
-  /*$('#custom_text')[0].addEventListener('paste',function(event){
+  $('#custom_text')[0].addEventListener('paste',function(event){
     event.preventDefault()
-  })*/
+  })
   
   
   
   $('.help_icon').on('click', function(){
     help.toggleClass('shrink')
     help.toggleClass('shrink_reverse')
+  })
+  
+  $('.instraction_icon').on('click', function(){
+    instraction.toggleClass('shrink')
+    instraction.toggleClass('shrink_reverse')
   })
   
   Mywindow.resize(function(){

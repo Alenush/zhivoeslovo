@@ -168,16 +168,16 @@ p{
   overflow: hidden;
   padding: 0;
 }
-.help_icon{ 
+.help_icon, .instraction_icon{ 
   background-color: white;
   position: relative;
   z-index: 10000;
 }
-.help_icon img{ 
+.help_icon img, .instraction_icon img{ 
   width: 100%;
   cursor:pointer;
 }
-.help_icon img: hover{ 
+.help_icon img: hover, .instraction_icon img: hover{ 
   opacity:0.7;
 }
 #check_send{
