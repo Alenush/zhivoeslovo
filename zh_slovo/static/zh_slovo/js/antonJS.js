@@ -193,7 +193,7 @@ function sendFormToServer(){ //основная форма ajax отправки
         });
     });
     
-    $('#exellentDictionForm').submit(function(event){ //отосладть данные об отличнике через ajax
+    /*$('#exellentDictionForm').submit(function(event){ //отосладть данные об отличнике через ajax
         event.preventDefault();
         $.getJSON("/zhivoeslovo/ajax/send_results/", $("#exellentDictionForm").serialize(), function(data){
             console.log(data);
@@ -202,5 +202,5 @@ function sendFormToServer(){ //основная форма ajax отправки
         .error(function(data) {
             console.log("Ошибка выполнения ajax"); 
         });
-    });
+    });*/
 }
