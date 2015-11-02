@@ -227,11 +227,12 @@ def normalize_user_text(user_text):
 
 
 def append_to_storage(filename, values, keys=None):
+    now = str(datetime.datetime.now())
     with open(filename, 'a', encoding='utf-8') as fd:
         if keys:
             values = [values.get(key) for key in keys]
         parts = (value.replace('\t', ' ').replace('\n', '\\n') for value in values)
-        fd.write('\t'.join(parts) + '\n')
+        fd.write(now + '\t' + '\t'.join(parts) + '\n')
 
 # ========SEND TO TEMPlATE ===============================
 
