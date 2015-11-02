@@ -171,7 +171,7 @@ p{
 .help_icon, .instraction_icon{ 
   background-color: white;
   position: relative;
-  z-index: 10000;
+  z-index: 1000;
 }
 .help_icon img, .instraction_icon img{ 
   width: 100%;
