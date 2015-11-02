@@ -71,6 +71,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'zhivoeslovo.wsgi.application'
 
+SESSION_COOKIE_AGE = 60*60*24*365 # one year
 SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
 
