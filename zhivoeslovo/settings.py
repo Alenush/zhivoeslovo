@@ -122,4 +122,4 @@ STATICFILES_DIRS = (
     '/var/www/static/',
 )
 
-DICT_DURATION = 15 # minutes
+DICT_DURATION = 3 # minutes
