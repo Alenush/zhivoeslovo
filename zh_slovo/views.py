@@ -154,7 +154,7 @@ def diff_strings(user, origin, dict_id):
     :param sent2: sentence origin
     :return: sentence with + -. - delete, + add right
     """
-    dif = difflib.SequenceMatcher(unicode.isspace, origin, user)
+    dif = difflib.SequenceMatcher(unicode.isspace, origin, user, autojunk=False)
     print u'\n'.join(u"{}: {}~{} {} / {}~{} {}".format(op, a1, a2, origin[a1:a2], b1, b2, user[b1:b2]) for op, a1, a2, b1, b2 in dif.get_opcodes())
     result = dif.get_opcodes()
     origin2user = orig_to_user(result) # dictionary of orig to user match
@@ -227,11 +227,12 @@ def normalize_user_text(user_text):
 
 
 def append_to_storage(filename, values, keys=None):
+    now = str(datetime.datetime.now())
     with open(filename, 'a', encoding='utf-8') as fd:
         if keys:
             values = [values.get(key) for key in keys]
         parts = (value.replace('\t', ' ').replace('\n', '\\n') for value in values)
-        fd.write('\t'.join(parts) + '\n')
+        fd.write(now + '\t' + '\t'.join(parts) + '\n')
 
 # ========SEND TO TEMPlATE ===============================
 
