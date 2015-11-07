@@ -247,10 +247,10 @@ def begin_dict(request, dict_id=None):
 
 def write_dict(request, active, future, all_dictations):
     return render(request, 'write_dict.html', dict(
-        next_date=future.data.day,
-        next_month=future.data.month,
-        next_time='{:%H:%M}'.format(future.data),
-        next_id=future.id,
+        next_date=future and future.data.day,
+        next_month=future and future.data.month,
+        next_time=future and '{:%H:%M}'.format(future.data),
+        next_id=future and future.id,
         video=active.video_link,
         dict_name=active.dict_name,
         dict_id=active.id,
@@ -299,7 +299,7 @@ def anons(request):
     if active:
         return write_dict(request, active, future, all_dictations)
     else:
-        return render(request,'anons.html', dict(link=future.otschet))
+        return render(request,'anons.html', dict(link=future and future.otschet))
 
 def success(request):
     return render(request,'success.html')    
