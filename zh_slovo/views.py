@@ -223,6 +223,7 @@ def normalize_user_text(user_text):
     user_text = user_text.strip()
     user_text = dash_re.sub('-', user_text)
     user_text = user_text.replace(' -',':')#пока так, пока я не поняла, что делать с регулярками.
+    user_text = user_text.replace(';',',')#пока так.
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
@@ -295,21 +296,26 @@ def send_good_result(request):
 def custom_404(request):
         return redirect('http://totaldict.ru/404')
 
+
 def test(request):
     return render(request,'test_json.html')
+
 
 @cache_page(15)
 def anons(request):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
+    print "WTF", active, future
     if active:
         return write_dict(request, active, future, all_dictations)
     else:
         return render(request,'anons.html', dict(link=future.otschet))
 
+
 def success(request):
     return render(request,'success.html')    
+
 
 def selftest(request):
     import doctest
