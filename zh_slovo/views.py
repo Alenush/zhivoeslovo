@@ -188,6 +188,7 @@ def return_user_grade(orph,punct):
     else:
         return u"2"
 
+
 def active_future_dictation(all_dictations):
     now = datetime.datetime.now()
     duration = datetime.timedelta(minutes=settings.DICT_DURATION)
@@ -200,6 +201,7 @@ def active_future_dictation(all_dictations):
             if not future or future.data > dictation.data:
                 future = dictation
     return active, future
+
 
 def dict_schedule(all_dictations):
     return [
@@ -220,6 +222,7 @@ def normalize_user_text(user_text):
     """
     user_text = user_text.strip()
     user_text = dash_re.sub('-', user_text)
+    user_text = user_text.replace(' -',':')#пока так, пока я не поняла, что делать с регулярками.
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
@@ -241,9 +244,12 @@ def begin_dict(request, dict_id=None):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
+    if future == None: #if no future diktation!
+        return render(request,'the_end.html')
     if dict_id:
         active = Dict_text.objects.get(id=int(dict_id))
     return write_dict(request, active, future, all_dictations)
+
 
 def write_dict(request, active, future, all_dictations):
     return render(request, 'write_dict.html', dict(
@@ -256,6 +262,7 @@ def write_dict(request, active, future, all_dictations):
         dict_id=active.id,
         list_of_dict=dict_schedule(all_dictations),
     ))
+
 
 def count_results(request):
     if request.method == 'GET':
