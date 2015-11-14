@@ -222,8 +222,9 @@ def normalize_user_text(user_text):
     """
     user_text = user_text.strip()
     user_text = dash_re.sub('-', user_text)
-    user_text = user_text.replace(' -',':')#пока так, пока я не поняла, что делать с регулярками.
-    user_text = user_text.replace(';',',')#пока так.
+    #user_text = user_text.replace(' -',':') for 8 dikt it is bad
+    user_text = user_text.replace(',-',', -')# for 8 dikt
+    user_text = user_text.replace(';',',')
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
