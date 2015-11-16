@@ -221,7 +221,7 @@ def normalize_user_text(user_text):
     Я нёс домой кулёк конфет, вдруг навстречу мне сосед.
     """
     user_text = user_text.strip()
-    #user_text = dash_re.sub('-', user_text) 8 dikt
+    #user_text = dash_re.sub('-', user_text)# 8 dikt
     #user_text = user_text.replace(' -',':') for 8 dikt it is bad
     user_text = user_text.replace(',-',', -')# for 8 dikt
     user_text = user_text.replace(';',',')
