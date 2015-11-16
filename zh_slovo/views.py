@@ -211,7 +211,7 @@ def dict_schedule(all_dictations):
     ]
 
 dash_re = re.compile(r'[—––—‒–—―‒–—―⁓⸺⸻‐_~¯ˉˍ˗˜‐‑‾⁃⁻₋−∼⎯⏤─➖𐆑]+')
-space_re = re.compile(r'\s+(-+\s+)?')
+space_re = re.compile(r'\s+(\s+)?')
 sentence_re = re.compile(r'(?:[.][.][.]|[.]|[?]|[?][!]|[!])$')
 def normalize_user_text(user_text):
     r"""
