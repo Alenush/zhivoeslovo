@@ -225,7 +225,7 @@ def normalize_user_text(user_text):
     #user_text = user_text.replace(' -',':') for 8 dikt it is bad
     user_text = user_text.replace(',-',', -')# for 8 dikt
     user_text = user_text.replace(';',',')
-    user_text = user_text.replace(u'ё',u'е')
+    #user_text = user_text.replace(u'ё',u'е')
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
