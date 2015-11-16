@@ -211,7 +211,7 @@ def dict_schedule(all_dictations):
     ]
 
 dash_re = re.compile(r'[—––—‒–—―‒–—―⁓⸺⸻‐_~¯ˉˍ˗˜‐‑‾⁃⁻₋−∼⎯⏤─➖𐆑]+')
-space_re = re.compile(r'\s+(\s+)?')
+space_re = re.compile(r'\s+(-+\s+)?')
 sentence_re = re.compile(r'(?:[.][.][.]|[.]|[?]|[?][!]|[!])$')
 def normalize_user_text(user_text):
     r"""
@@ -225,6 +225,7 @@ def normalize_user_text(user_text):
     #user_text = user_text.replace(' -',':') for 8 dikt it is bad
     user_text = user_text.replace(',-',', -')# for 8 dikt
     user_text = user_text.replace(';',',')
+    user_text = user_text.replace('ё','е')
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
