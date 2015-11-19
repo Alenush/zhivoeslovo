@@ -221,11 +221,9 @@ def normalize_user_text(user_text):
     Я нёс домой кулёк конфет, вдруг навстречу мне сосед.
     """
     user_text = user_text.strip()
-    #user_text = dash_re.sub('-', user_text)# 8 dikt
-    #user_text = user_text.replace(' -',':') for 8 dikt it is bad
-    user_text = user_text.replace(',-',', -')# for 8 dikt
+    #user_text = dash_re.sub('-', user_text)
+    user_text = user_text.replace(',-',', -')# for 8, 10 dikt
     user_text = user_text.replace(';',',')
-    #user_text = user_text.replace(u'ё',u'е')
     user_text = space_re.sub(' ', user_text)
     user_text = sentence_re.sub('.', user_text)
     user_text = user_text.replace(" ,", ",")
@@ -247,7 +245,7 @@ def begin_dict(request, dict_id=None):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
-    if future == None: #if no future diktation!
+    if future == None and active == None: #if no future diktation!
         return render(request,'the_end.html')
     if dict_id:
         active = Dict_text.objects.get(id=int(dict_id))
@@ -308,7 +306,6 @@ def anons(request):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
-    print "WTF", active, future
     if active:
         return write_dict(request, active, future, all_dictations)
     else:
