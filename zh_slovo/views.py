@@ -308,6 +308,8 @@ def anons(request):
     request.session.setdefault('uid', str(uuid4()))
     all_dictations = Dict_text.objects.all()
     active, future = active_future_dictation(all_dictations)
+    if future == None and active == None: #if no future diktation!
+        return render(request,'the_end.html')
     if active:
         return write_dict(request, active, future, all_dictations)
     else:
